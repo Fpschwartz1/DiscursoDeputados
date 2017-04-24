@@ -28,17 +28,16 @@ Como objetivos específicos, podem ser destacados:
 ## Cronograma
 
 Mês/Ano |	Atividade
---------|------------------------------------------------------------------------------------
-Fev/2017| Compilação das bases textuais das legislaturas 52 e 53
-Mar/2017| Compilação das bases textuais das legislaturas 54 e 55
-Abr/2017| Estruturação do corpus e testes de desempenho
-Mai/2017| Organização dos n-gramas e desenvolvimento de classificadores
-Jun/2017| Testes de pacotes lexicais e estruturação de vocabulário temático
-Jul/2017| Desenvolvimento de algoritmos para análise morfológica
-Ago/2017| Desenvolvimento de algoritmos para análise sintática
-Set/2017| Desenvolvimento de algoritmos para análise semântica
-Out/2017| Desenvolvimento de algoritmos para análise pragmática
-Nov/2017| Construção de interface para utilização dos algoritmos
-Dez/2017| Avaliação dos algoritmos desenvolvidos em situações práticas reais
+--------|----------------------------------------------------------------------
+Mar/2017| Compilação das bases textuais das legislaturas 52 e 53
+Abr/2017| Compilação das bases textuais das legislaturas 54 e 55
+Mai/2017| Estruturação do corpus e testes de desempenho
+Jun/2017| Organização dos n-gramas e desenvolvimento de classificadores
+Jul/2017| Testes de pacotes lexicais e estruturação de vocabulário temático
+Ago/2017| Desenvolvimento de algoritmos para análise morfológica
+Set/2017| Desenvolvimento de algoritmos para análise sintática
+Out/2017| Desenvolvimento de algoritmos para análise semântica
+Nov/2017| Desenvolvimento de algoritmos para análise pragmática
+Dez/2017| Construção de interface para utilização dos algoritmos
 Jan/2018| Avaliação dos algoritmos desenvolvidos em situações práticas reais
 Fev/2018| Elaboração do relatório de pesquisa
