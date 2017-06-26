@@ -22,7 +22,7 @@ str_retirar <- function(texto){
   retirar
 }
 
-for(ano in 2007:2017){
+for(ano in 2017){
   arquivo <- paste0("..\\..\\Dados\\discurso_", ano,"_dit.csv")
   discursos <- read.csv2(arquivo, sep=";", header = FALSE, colClasses = "character")
   
@@ -32,7 +32,7 @@ for(ano in 2007:2017){
   # exemplo: "\\{\\{ MS Sans Serif;\\}\\{ Symbol;\\}\\{ MS Sans Serif;\\}\\{ Arial;\\}\\}\\{;\\}"
   
   for(i in 1:nrow(discursos)){
-    if(!is.na(discursos$Discurso[i])){
+    if(!is.na(discursos$Discurso[i]) & (discursos$Discurso[i] != "")){
       discurso <- decode_rtf(discursos$Discurso[i])
       discurso <- gsub("\\*", "", discurso)
       discurso <- gsub("\\\\", "", discurso)
@@ -44,14 +44,14 @@ for(ano in 2007:2017){
     }
   }
   
-  for(i in 1:nrow(discursos)){
-    if(!is.na(discursos$Discurso[i]) & (discursos$Discurso[i] != "")){
-      discurso <- decode_rtf(discursos$Discurso[i])
-      if(substr(discurso,1,1) == '{'){
-        print(discurso)
-      }
-    }
-  }
+  #for(i in 1:nrow(discursos)){
+  #  if(!is.na(discursos$Discurso[i]) & (discursos$Discurso[i] != "")){
+  #    discurso <- decode_rtf(discursos$Discurso[i])
+  #    if(substr(discurso,1,1) == '{'){
+  #      print(discurso)
+  #    }
+  #  }
+  #}
   
   # grava o último bloco de linhas no arquivo
   write.table(x=discursos, sep=";",
