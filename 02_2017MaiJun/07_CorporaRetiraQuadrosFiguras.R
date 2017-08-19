@@ -1,7 +1,26 @@
 if(!require(stringr)) { install.packages('stringr') }
 
 # retira quadros, tabelas e figuras
-retira_fig <- function(discurso, ini, fim){
+retira_fig <- function(discurso, ano){
+
+  # marcador de inicio e fim da figura
+  ini <- "010009000003"
+  fim <- "ffff030000000000"
+  
+  if(ano == 2003){
+    ini <- "0105000002000000"
+    fim <- "FFFF030000000000\\}\\}"
+  }
+  
+  if(ano == 2007){
+    ini <- "010009000003"
+    fim <- "030000000000\\}"
+  }
+  
+  if(ano == 2009){
+    ini <- "010009000003"
+    fim <- "FFFF030000000000"
+  }
 
   li <- str_locate_all(discurso, ini)
   lf <- str_locate_all(discurso, fim)

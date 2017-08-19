@@ -1,27 +1,8 @@
 source("05_EncodeDecode.R")
 source("07_CorporaRetiraQuadrosFiguras.R")
 
-for(ano in 2003:2017){
+for(ano in 2012:2012){
   print(paste("Início:", ano))
-  
-  # marcador de inicio e fim da figura
-  ini <- "010009000003"
-  fim <- "ffff030000000000"
-  
-  if(ano == 2003){
-    ini <- "0105000002000000"
-    fim <- "FFFF030000000000\\}\\}"
-  }
-
-  if(ano == 2007){
-    ini <- "010009000003"
-    fim <- "030000000000\\}"
-  }
-
-  if(ano == 2009){
-    ini <- "010009000003"
-    fim <- "FFFF030000000000"
-  }
   
   arquivo <- paste0("..\\..\\Dados\\discurso_", ano,"_dit.csv")
   discursos <- read.csv2(arquivo, sep=";", colClasses = "character")
@@ -39,7 +20,7 @@ for(ano in 2003:2017){
       
       # if(grepl("possam alimentar os rebanhos de suínos e aves", discurso)) break #
       
-      discurso <- retira_fig(discurso, ini, fim)
+      discurso <- retira_fig(discurso, ano)
      
       write(discurso, fileConn, append = TRUE, sep="\n")
     
