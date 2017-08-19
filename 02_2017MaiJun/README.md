@@ -4,7 +4,7 @@
 
 ### 05_EncodeDecode.R
 
-Contém a função *encode_rtf* que codifica texto *rtf* para *base64* e a função *decode_rtf* que decodifica *base64* para *rtf*.
+Contém a função **encode_rtf** que codifica texto **rtf** para **base64** e a função *decode_rtf* que decodifica **base64** para **rtf**.
 
 ### 06_AjustaDiscursoInteiroTeor.R
 
@@ -14,11 +14,11 @@ Também insere cabeçalho aos arquivos "discurso_AAAA_dit.csv", denominando as c
 
 ### 07_CorporaRetiraQuadrosFiguras.R
 
-Contém a função *retiga_fig* que recebe como parâmetros o *discurso* e os demarcadores de início e fim da figura, quadro ou tabela.
+Contém a função **retira_fig** que recebe como parâmetros o *discurso* e os demarcadores de início e fim da figura, quadro ou tabela.
 
 ### 08_CriaCorporaDiscursoInteiroTeor.R
 
-Lê os arquivos "discurso_AAAA_dit.csv", decodifica cada discurso para *rtf*, utiliza a função *retira_fig* passando os demarcadores de início e fim e grava no aqruivo "Discursos_AAAA.txt" um texto único (**corpus**) com todos os discursos do respecitvo ano.
+Lê os arquivos "discurso_AAAA_dit.csv", decodifica cada discurso para **rtf**, utiliza a função **retira_fig** passando os demarcadores de início e fim e grava no aqruivo "Discursos_AAAA.txt" um texto único (*corpus*) com todos os discursos do respecitvo ano.
 
 ### Dados
 
