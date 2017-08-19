@@ -1,5 +1,6 @@
 source("05_EncodeDecode.R")
 
+# monta a string de formatacao a ser retirada
 str_retirar <- function(texto){
   texto <- substr(texto, 1, 100)
   loc <- str_locate_all(texto, '\\}')[[1]]
@@ -22,7 +23,9 @@ str_retirar <- function(texto){
   retirar
 }
 
-for(ano in 2017){
+for(ano in 2003:2017){
+  print(paste("Início:", ano))
+  
   arquivo <- paste0("..\\..\\Dados\\discurso_", ano,"_dit.csv")
   discursos <- read.csv2(arquivo, sep=";", header = FALSE, colClasses = "character")
   
@@ -37,6 +40,7 @@ for(ano in 2017){
       discurso <- gsub("\\*", "", discurso)
       discurso <- gsub("\\\\", "", discurso)
       discurso <- gsub('\"', "'", discurso)
+      discurso <- gsub("Helvetica-Oblique;\\}\\}\\{;\\}", "", discurso)
       
       discurso <- gsub(str_retirar(discurso), "", discurso)
       
@@ -44,19 +48,22 @@ for(ano in 2017){
     }
   }
   
-  #for(i in 1:nrow(discursos)){
-  #  if(!is.na(discursos$Discurso[i]) & (discursos$Discurso[i] != "")){
-  #    discurso <- decode_rtf(discursos$Discurso[i])
-  #    if(substr(discurso,1,1) == '{'){
-  #      print(discurso)
-  #    }
-  #  }
-  #}
+  # verifica se restou algum discurso iniciado com caracteres
+  # de formatação e apresenta no console para inspeção visual
+  for(i in 1:nrow(discursos)){
+    if(!is.na(discursos$Discurso[i]) & (discursos$Discurso[i] != "")){
+      # o indicador de caracter de formtação é o '{'
+      discurso <- decode_rtf(discursos$Discurso[i])
+      if(substr(discurso,1,1) == '{'){
+        print(paste(ano, ' - ', i))
+      }
+    }
+  }
   
   # grava o último bloco de linhas no arquivo
   write.table(x=discursos, sep=";",
               file=arquivo,
               row.names=FALSE)
   
-  print(ano)
+  print(paste("Fim:", ano))
 }

@@ -3,8 +3,8 @@
 # Codifica e decodifica RTF
 ################################################
 
-library(RCurl)
-library(stringr)
+if(!require(RCurl)) { install.packages('RCurl') }
+if(!require(stringr)) { install.packages('stringr') }
 
 # decodificacao do formato RTF - Base64 para txt
 # https://www.base64decode.org/

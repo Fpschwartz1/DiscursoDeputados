@@ -1,4 +1,4 @@
-# CRONOGRAMA: março e abril de 2017
+﻿# CRONOGRAMA: março e abril de 2017
 
 ## Scripts R
 
@@ -23,3 +23,5 @@ Neste script foram desenvolvidas duas funções para a codificação txt-[Base64
 ### Dados
 
 [Lista dos arquivos](https://1drv.ms/f/s!AiIkZUb8XZnDi04C4OHCMQYBgyxK) gerados após a execução dos scripts anteriores.
+
+Observação: o pesquisador interessado em reproduzir os resultados aqui encontrados deve executar os scripts na sequência em que estão apresentados.

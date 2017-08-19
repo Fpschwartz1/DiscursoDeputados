@@ -95,6 +95,7 @@ for(ano in 2003:2017){
 
           print(paste0('Erro - ',i,':',linhas))
           i <- i - 1
+          Sys.sleep(0.5)
 
         }
       }
