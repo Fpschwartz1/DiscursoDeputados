@@ -1,5 +1,9 @@
 source("05_EncodeDecode.R")
 
+if(!require(qdap)) { install.packages('qdap') }
+
+pasta <- "..\\..\\Dados\\"
+
 # monta a string de formatacao a ser retirada
 str_retirar <- function(texto){
   texto <- substr(texto, 1, 100)
@@ -23,10 +27,10 @@ str_retirar <- function(texto){
   retirar
 }
 
-for(ano in 2003:2017){
+for(ano in c(2000,2002)){
   print(paste("Início:", ano))
   
-  arquivo <- paste0("..\\..\\Dados\\discurso_", ano,"_dit.csv")
+  arquivo <- paste0(pasta, "discurso_", ano,"_dit.csv")
   discursos <- read.csv2(arquivo, sep=";", header = FALSE, colClasses = "character")
   
   colnames(discursos) <- c("AnoSeq", "DataHora", "Discurso")
@@ -43,6 +47,7 @@ for(ano in 2003:2017){
       discurso <- gsub("Helvetica-Oblique;\\}\\}\\{;\\}", "", discurso)
       
       discurso <- gsub(str_retirar(discurso), "", discurso)
+      discurso <- bracketX(discurso)
       
       discursos$Discurso[i] <- encode_rtf(discurso)
     }

@@ -25,9 +25,12 @@ print(ptm)
 # no arquivo para otimização da memória 
 gravarLinhas <- 500
 
-for(ano in 2003:2017){
+# pasta para a gravação dos arquivos
+pasta <- "..\\..\\Dados\\"
 
-  discurso <- read.csv(paste0("discurso_",ano,".csv"), sep=";", colClasses = "character")
+for(ano in 2017:2017){
+
+  discurso <- read.csv(paste0(pasta,"discurso_",ano,".csv"), sep=";", colClasses = "character")
   
   # ajusta campos para leitura da URL tirnado espaços em branco
   names(discurso)[1]      <- "seq"
@@ -110,7 +113,7 @@ for(ano in 2003:2017){
       
       # grava as linhas com inteiro teor no arquivo ...
       write.table(x=inteiroTeor, sep=";",
-                 file=paste0("discurso_",ano,"_dit.csv"),
+                 file=paste0(pasta, "discurso_",ano,"_dit.csv"),
                  append=TRUE,
                  row.names=FALSE,
                  col.names=FALSE)
@@ -137,7 +140,7 @@ for(ano in 2003:2017){
   
   # grava o último bloco de linhas no arquivo
   write.table(x=inteiroTeor, sep=";",
-              file=paste0("discurso_",ano,"_dit.csv"),
+              file=paste0(pasta, "discurso_",ano,"_dit.csv"),
               append=TRUE,
               row.names=FALSE,
               col.names=FALSE)

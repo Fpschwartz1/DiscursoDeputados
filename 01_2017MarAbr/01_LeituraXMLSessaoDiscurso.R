@@ -18,12 +18,15 @@ print(ptm)
 dataIni <- '01/01/' 
 dataFim <- '23/12/'
 
+# pasta para a gravação dos arquivos
+pasta <- "..\\..\\Dados\\"
+
 trim <- function (x){
             x <- gsub("\n", "", x)
             str_trim(x)
         }
 
-for(ano in 2003:2017){
+for(ano in 2017:2017){
     
     # monta a URL com base no ano e período
     url <-  paste0("http://www.camara.leg.br/sitcamaraws/SessoesReunioes.asmx/ListarDiscursosPlenario?",
@@ -35,7 +38,8 @@ for(ano in 2003:2017){
     repeat{
       data <- try(xmlParse(url, isURL=TRUE, asTree = TRUE, useInternalNodes = TRUE), TRUE)
       if(typeof(data) == "externalptr") break
-      print("Erro")
+      print("Erro ao acessar a URL")
+      Sys.sleep(0.5)
     }
     
     # converte formato XML para lista do R
@@ -94,7 +98,7 @@ for(ano in 2003:2017){
       }
       
       # mostra ano e índice do discurso lido ...
-      print(paste0(ano,' - ',k))
+      print(paste0(ano,' - ',i))
       # ... e o tempo decorrido para a leitura
       print(proc.time() - ptm)
       ptm <- proc.time()
@@ -102,7 +106,7 @@ for(ano in 2003:2017){
       
     #write.csv2(sessaoDiscurso, paste0("sessao_discurso_",ano,".csv"))
     #write.csv2(faseSessao, paste0("fase_sessao_",ano,".csv"))
-    write.csv2(discurso, paste0("discurso_",ano,".csv"))
+    write.csv2(discurso, paste0(pasta, "discurso_",ano,".csv"))
 }
 
 # http://www.camara.leg.br/SitCamaraWS/Proposicoes.asmx/ObterVotacaoProposicao?tipo=MSC&numero=950&ano=1989

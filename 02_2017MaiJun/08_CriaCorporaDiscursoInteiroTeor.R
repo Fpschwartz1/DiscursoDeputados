@@ -1,7 +1,7 @@
 source("05_EncodeDecode.R")
 source("07_CorporaRetiraQuadrosFiguras.R")
 
-for(ano in 2012:2012){
+for(ano in 2000:2002){
   print(paste("Início:", ano))
   
   arquivo <- paste0("..\\..\\Dados\\discurso_", ano,"_dit.csv")
@@ -11,7 +11,7 @@ for(ano in 2012:2012){
   
   for(i in 1:nrow(discursos)){
 
-        # retira discursos 'sujos' com excesso de caracteres de controle
+    # retira discursos 'sujos' com excesso de caracteres de controle
     if( (ano == 2012) & (i %in% 6862:6879) ) next
     
     if(!is.na(discursos$Discurso[i]) & (discursos$Discurso[i] != "")){

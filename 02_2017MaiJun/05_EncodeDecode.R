@@ -45,3 +45,20 @@ encode_rtf <- function(txt) {
     str_trim %>%
     base64Encode 
 }
+
+retira_acentos <- function(txt) {
+  txt %>%
+    str_replace_all("à", "a") %>%
+    str_replace_all("á", "a") %>%
+    str_replace_all("ã", "a") %>%
+    str_replace_all("â", "a") %>%
+    str_replace_all("é", "e") %>%
+    str_replace_all("ê", "e") %>%
+    str_replace_all("í", "i") %>%
+    str_replace_all("ó", "o") %>%
+    str_replace_all("õ", "o") %>%
+    str_replace_all("ô", "o") %>%
+    str_replace_all("ú", "u") %>%
+    str_replace_all("ü", "u") %>%
+    str_replace_all("ç", "c")
+}

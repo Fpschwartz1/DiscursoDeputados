@@ -6,8 +6,11 @@
 # "Erro - 305:17775"
 # xmlSAX2Characters: huge text nodeExtra content at the end of the document
 
+# pasta para a leitura dos arquivos
+pasta <- "..\\..\\Dados\\"
+
 # lê arquivo com identificação dos textos longos
-textoLongo <- read.csv2("TextoLongo.csv", sep=";", header = FALSE, colClasses = "character")
+textoLongo <- read.csv2(paste0(pasta, "TextoLongo.csv"), sep=";", header = FALSE, colClasses = "character")
 names(textoLongo) <- c("ano", "sequencial", "url")
 
 # lista identificação dos textos longos
@@ -68,7 +71,7 @@ encode_rtf <- function(txt) {
 ##########################################################################
 # Lê arquivo "discurso_2011_dit.csv" para inserção dos discursos ajustados
 ##########################################################################
-discursos2011 <- read.csv2("discurso_2011_dit.csv", sep=";", header = FALSE, colClasses = "character")
+discursos2011 <- read.csv2(paste0(pasta, "discurso_2011_dit.csv"), sep=";", header = FALSE, colClasses = "character")
 
 ################################################################################################
 # discurso do deputado EUDES XAVIER, PT, CE de 06/10/2011 excluidos os quadros - sequencial 5305
