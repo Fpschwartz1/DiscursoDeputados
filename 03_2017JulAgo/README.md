@@ -1,4 +1,4 @@
-﻿# CRONOGRAMA: Julho e agosto de 2017
+﻿# CRONOGRAMA: julho e agosto de 2017
 
 ## Scripts R
 
@@ -12,10 +12,14 @@ A partir dos critérios ano inicial, ano final e partido, cria córpora "corpora
 
 ### 11_LimpaCorporaParaAnalise.R
 
-Efetua as etapas essenciais do PLN: transformações para minúscula; remoção de números, pontuação e espaços; remoção de stopwords (palavras com pouca informação) a partir de dicionário com 200 palavras específicas do discurso parlamentar, além de conjunto com nomes próprios encontrados no discurso parlamentar.
+Efetua as etapas essenciais do PLN: transformações para minúscula; remoção de números, pontuação e espaços; remoção de stopwords (palavras com pouca informação) a partir de dicionário com 200 palavras específicas do discurso parlamentar, além de conjunto com nomes próprios encontrados no discurso parlamentar (arquivos "stop####_pt.txt").
 
 O resultado final é armazenado em arquivo cujo nome é formado pela estrutura "corpora_partido_ini_fim_limpo.rds".
 
 ### 12_NuvemDePalavrasFreq.Rmd
 
 Cria a matriz de frequência de termos e documentos; identifica as palavras mais frequentes; efetua a penalização de palavras por meio do algoritmo de inversão da frequência de documentos; filtra termos escassos; constrói nuvens de palavras.
+
+Exemplos: 
+["12_NuvemDePalavrasFreq_PT_2003_2016.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/tree/master/03_2017JulAgo/12_NuvemDePalavrasFreq_PT_2003_2016.html) 
+["12_NuvemDePalavrasFreq_PT_2016_2017.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/tree/master/03_2017JulAgo/12_NuvemDePalavrasFreq_PT_2016_2017.html)
