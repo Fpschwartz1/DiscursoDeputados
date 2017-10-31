@@ -20,6 +20,6 @@ O resultado final é armazenado em arquivo cujo nome é formado pela estrutura "
 
 Cria a matriz de frequência de termos e documentos; identifica as palavras mais frequentes; efetua a penalização de palavras por meio do algoritmo de inversão da frequência de documentos; filtra termos escassos; constrói nuvens de palavras.
 
-Exemplos: 
-["12_NuvemDePalavrasFreq_PT_2003_2016.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/blob/master/03_2017JulAgo/12_NuvemDePalavrasFreq_PT_2003_2016.html) 
+Exemplos:  
+["12_NuvemDePalavrasFreq_PT_2003_2016.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/blob/master/03_2017JulAgo/12_NuvemDePalavrasFreq_PT_2003_2016.html)  
 ["12_NuvemDePalavrasFreq_PT_2016_2017.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/blob/master/03_2017JulAgo/12_NuvemDePalavrasFreq_PT_2016_2017.html)
