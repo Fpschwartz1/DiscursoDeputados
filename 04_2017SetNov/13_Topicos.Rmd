@@ -1,0 +1,30 @@
+---
+title: "Tópicos"
+author: "Fabiano Peruzzo Schwartz"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=FALSE}
+pasta <- "..\\Topicos\\"
+arquivo <- paste0("topicos_", partido, "_", ini, "_", fim, ".rds")
+
+termos <- readRDS(paste0(pasta, arquivo))
+
+print(sprintf("Partido: %s (%d - %d)", partido, ini, fim))
+print(sprintf("Arquivo: %s", arquivo))
+```
+
+```{r}
+# VEM
+termos[[1]]
+
+# VEM fixed
+termos[[2]]
+
+# Gibbs
+termos[[3]]
+```

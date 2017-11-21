@@ -1,7 +1,17 @@
+# remove todas as variáveis da memória
+# rm(list = ls(all = TRUE))
+
 source("..\\02_2017MaiJun\\05_EncodeDecode.R")
 
+# parâmetros
+# ini <- 2003
+# fim <- 2003
+# partido <- "PT"
+
+# pacotes
 if(!require(tm)) { install.packages('tm') }
 if(!require(qdap)) { install.packages('qdap') }
+if(!require(stringi)) { install.packages('stringi') }
 # if(!require(profvis)) { install.packages('profvis') }
 
 if(!require(tidyverse)) { install.packages('tidyverse') }
@@ -25,21 +35,65 @@ qdap_clean <- function(x){
 }      
 
 # aplicada a corpus
-tm_clean <- function(corpus, stopwords){
+tm_clean <- function(corpus, stopwords, stopngrams){
   corpus <- tm_map(corpus, content_transformer(tolower))
   corpus <- tm_map(corpus, removeNumbers)
   corpus <- tm_map(corpus, removePunctuation)
-  corpus <- tm_map(corpus, stripWhitespace)
+  
+  # remove plural e retira acentos
+  corpus <- tm_map(corpus, content_transformer(remove_plural))
+  corpus <- tm_map(corpus, content_transformer(retira_acentos))
+  
+  # retira palavras de tamanho {1}
+  corpus <- tm_map(corpus, content_transformer(function(x) gsub('\\b[a-z]{1}\\b', '', x)))
+  
+  # remove stop words
   corpus <- tm_map(corpus, removeWords, stopwords)
+  
+  # remove espaços
+  corpus <- tm_map(corpus, stripWhitespace)
+  corpus <- tm_map(corpus, content_transformer(str_trim))
+  
+  # remove n-grams
+  corpus <- tm_map(corpus, content_transformer(remove_ngramas), stopngrams)
+  
+  # remove espaços
+  corpus <- tm_map(corpus, stripWhitespace)
+  corpus <- tm_map(corpus, content_transformer(str_trim))
+
   return(corpus)
 }
 
-ini <- 2003
-fim <- 2016
-partido <- "PT"
+remove_ngramas <- function(texto, ngramas){
+  n <- length(ngramas)
+  if(n >= 1){
+    for(i in 1:n) {
+      texto <- gsub(ngramas[i], "", texto)
+      # stripWhitespace
+      if(length(texto) > 0){ # se não for character(0)
+        texto <- str_split(texto, ' ')[[1]]
+        texto <- texto[texto != ""]
+        texto <- stri_c_list(list(texto), sep=" ")
+      } else {
+        texto <- ""
+        break
+      }
+    }
+  }
+  return(texto)
+}
+
 
 # profvis({ # identifica gragalos de processamento
 
+limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
+  # ini: ano inicial
+  # fim: ano final
+  # partido: partido
+  # fl_partes: TRUE - quando a lista de nomes está quebrada em suas partes
+  
+  print(paste0(partido, " - ", ini, " a ", fim))
+  
   # lê arquivo com todos os discursos
   pasta <- "..\\CorporaRDS\\"
   arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, ".rds")
@@ -52,31 +106,50 @@ partido <- "PT"
   # é utilizada uma vez que os dados do discurso estão contidos em um vetor.
   docs <- VectorSource(vdisc)
   docs <- VCorpus(docs) # corpus volátil
-  
+
   #### removendo stopwords
-  stopw <- readLines("stopwords_pt.txt")
+  stopw <- readLines("stopwords_portugues.txt")
   #### removendo palavras com pouca informação
-  stopw <- c(stopw, readLines("stopwords_pt_discurso.txt"))
-  #### removendo nomes
-  stopw <- c(stopw, readLines("stopwords_pt_nomes.txt"))
-  # retira acentos das stopwords
-  stopw <- retira_acentos(stopw)
-  
+  stopw <- c(stopw, readLines("stopwords_discurso.txt"))
+  #### removendo partidos
+  stopw <- c(stopw, readLines("stopwords_partidos.txt"))
+  # retira repetições de palavras
+  stopw <- as.character(levels(as.factor(stopw)))
+
+  # removendo n-gramas: bigramas, nomes e outros
+  # stopngram deve ser contruido na ordem em que está
+  stopngram <- readLines("stopwords_bigramas.txt")
+  stopngram <- c(stopngram, readLines("stopwords_membros_mesa.txt"))
+  stopngram <- c(stopngram, readLines("stopwords_nomes_compostos.txt"))
+  stopngram <- c(stopngram, readLines("stopwords_nomes_simples.txt"))
+
   # limpeza com tm_clean
-  docs <- tm_clean(docs, stopw)
+  print('limpeza do corpus')
+  docs <- tm_clean(docs, stopw, stopngram)
   
   # deixando apenas os radicais das palavras
   # docs <- tm_map(docs, stemDocument, language = "portuguese")  
 
   # remonta o vetor de discursos após os discursos
-  # terem passado pelo filtro; isso porque o pacote 
+  # terem passado pelos primeiros filtros; isso porque o pacote 
   # qdap só pode ser usado sobre vetores
+  print('reconstrução do vetor de discursos')
   n <- length(docs)
   vdisc <- vector("character", n)
   for(i in 1:n){
-    vdisc[i] <- docs[[i]]$content
+    if(length(docs[[i]]$content) > 0){
+      vdisc[i] <- docs[[i]]$content
+    } else { 
+      vdisc[i] <- ""
+    }
   }
+  vdisc <- vdisc[vdisc != ""]
+  vdisc <- vdisc[!is.na(vdisc)]
   
+  # reconstrução do corpus para eliminar documentos em branco
+  docs <- VectorSource(vdisc)
+  docs <- VCorpus(docs) # corpus volátil
+
   # termFreq, do pacote tm, também funciona sobre vetores,
   # porém é mais lenta que freq_terms do pacote qdap
   # system.time(tf <- termFreq(vdisc))
@@ -86,11 +159,13 @@ partido <- "PT"
   
   # system.time(tfq <- freq_terms(vdisc, at.least = 3, top = 20))
   # determina termos mais frequentes com freq_terms (qdap)
+  print('termos mais frequentes')
   tfq <- freq_terms(vdisc, at.least = 3, top = 200)
 
   ###########
   # bigramas
   ###########
+  print('bigramas mais frequentes')
   # data frame
   bigramas <- data.frame(id_discurso = 1:length(vdisc), 
                          text = vdisc,
@@ -107,15 +182,15 @@ partido <- "PT"
   bigramas <- bigramas[bigramas$n >= 3,]
   
   # remove bigramas sem informação
-  bigramas <- bigramas[!(bigramas$bigram %in% readLines("stopbigramas_pt.txt")), ]
+  # bigramas <- bigramas[!(bigramas$bigram %in% readLines("stopbigramas_pt.txt")), ]
   
   dados <- list(docs, tfq, bigramas)
   
 # })
 
-arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
-saveRDS(dados, paste0(pasta, arquivo))
+  arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
+  saveRDS(dados, paste0(pasta, arquivo))
+}
 
-
-
-
+# remove todas as variáveis, menos os parâmetros ini, fim e partido
+# rm(list = ls(all = TRUE)[!(ls(all = TRUE) %in% c("ini", "fim", "partido"))])

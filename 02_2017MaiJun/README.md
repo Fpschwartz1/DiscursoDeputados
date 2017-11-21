@@ -4,7 +4,7 @@
 
 ### 05_EncodeDecode.R
 
-Contém a função **encode_rtf** que codifica texto **rtf** para **base64** e a função *decode_rtf* que decodifica **base64** para **rtf**.
+Contém a funções: **encode_rtf**, que codifica texto **rtf** para **base64**; **decode_rtf**, que decodifica **base64** para **rtf**; **retira_acentos**, que retira os sinais de acentuação e o cedilha; **remove_plural**, que converte palavras do plural para o singular.
 
 ### 06_AjustaDiscursoInteiroTeor.R
 

@@ -6,10 +6,17 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE)
 
+# critérios
+ini <- 2016
+fim <- 2017
+partido <- "PT"
+
 if(!require(stringr)) { install.packages('stringr') }
 
 source("..\\02_2017MaiJun\\05_EncodeDecode.R")
 source("..\\02_2017MaiJun\\07_CorporaRetiraQuadrosFiguras.R")
+
+print(sprintf("Partido: %s (%d - %d)", partido, ini, fim))
 
 ```
 
@@ -38,11 +45,6 @@ tipo_sessao
 ### Lê arquivo de discursos e aplica critérios iniciais de filtragem
 
 ```{r}
-# critérios
-ini <- 2003
-fim <- 2015
-partido <- "PMDB"
-
 pastadest <- "..\\CorporaRDS\\"
 arquivo <- paste0(pastadest, "corpora_", partido, "_", ini, "_", fim, ".rds")
 
@@ -100,10 +102,13 @@ for(i in 1:n){
                        )
     
     # converte para minúsculo
-    discurso <- str_to_lower(discurso)
+    # discurso <- str_to_lower(discurso)
     
+    # remove plural
+    # discurso <- remove_plural(discurso)
+
     # retira acentos e cedilha
-    discurso <- retira_acentos(discurso)
+    # discurso <- retira_acentos(discurso)
     
     # retira nome de oradores
     #for(orador in oradores){

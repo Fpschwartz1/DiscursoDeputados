@@ -1,6 +1,10 @@
 ---
 title: "Palavras frequentes"
 output: html_document
+params:
+  ini: 2016
+  fim: 2017
+  partido: "PSDB"
 ---
 
 ```{r setup, include=FALSE}
@@ -12,6 +16,12 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 ```{r, echo=FALSE}
 source("..\\02_2017MaiJun\\05_EncodeDecode.R")
 
+# parâmetros
+ini <- params$ini
+fim <- params$fim
+partido <- params$partido
+
+# pacotes
 if(!require(tm)) { install.packages('tm') }
 if(!require(qdap)) { install.packages('qdap') }
 if(!require(RWeka)) { install.packages('RWeka') }
@@ -31,10 +41,6 @@ if(!require(gridExtra)) { install.packages('gridExtra') }
 
 
 # lê arquivo com todos os discursos
-ini <- 2003
-fim <- 2016
-partido <- "PT"
-
 pasta <- "..\\CorporaRDS\\"
 arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
 lista <- readRDS(paste0(pasta, arquivo))
@@ -57,7 +63,7 @@ purple_orange <- purple_orange[-(1:2)]
 # criando uma tdm com "term frequency-inverse document frequency".
 # The TfIdf score increases by term occurrence but is penalized by the frequency of appearance among all documents.
 # From a common sense perspective, if a term appears often it must be important. This attribute is represented by term frequency (i.e. Tf), which is normalized by the length of the document. However, if the term appears in all documents, it is not likely to be insightful. This is captured in the inverse document frequency (i.e. Idf).
-tdm <- TermDocumentMatrix(docs, control = list(wordLengths = c(3,10), weighting = weightTfIdf))
+tdm <- TermDocumentMatrix(docs, control = list(wordLengths = c(3,15), weighting = weightTfIdf))
 
 # Why would you want to adjust the sparsity of the TDM/DTM?
 # TDMs and DTMs are sparse, meaning they contain mostly zeros.
@@ -73,9 +79,9 @@ freq_tdm <- data.frame(WORD = names(freq_tdm), FREQ = freq_tdm)
 par(mfrow = c(1, 2), pty = "s")
 
 # create a wordcloud with purple_orange palette
-# docs
-wordcloud(docs, max.words = 20, colors = purple_orange)
-# freq_tdm
+# tfq - sem tratamento TfIdf e sparsity
+wordcloud(tfq$WORD, tfq$FREQ, max.words = 20, colors = purple_orange)
+# freq_tdm - com tratamento TfIdf e sparsity
 wordcloud(freq_tdm$WORD, freq_tdm$FREQ, max.words = 20, colors = purple_orange)
 ```
 
@@ -102,28 +108,37 @@ grid.arrange(p1, p2)
 
 ```{r, echo = FALSE}
 # dendogramas
+tfq <- tfq[1:20,]
+hc <- hclust( dist(tfq$FREQ) )
+plot(hc, labels = tfq$WORD, main = "Contagem bruta", xlab = "Palavras")
 
-# tdm_df <- as.data.frame(tdm)
+hc <- hclust( dist(freq_tdm$FREQ) )
+plot(hc, labels = freq_tdm$WORD, main = "Contagem com TfIdf e Sparsity", xlab = "Palavras")
 
-# Create tweets_dist
-# tdm_dist <- dist(tdm_df)
-
-# Create hc
-# hc <- hclust(tdm_dist)
-
-# Plot the dendrogram
-# plot(hc)
 ```
 
 ```{r, echo = FALSE}
 # Wordcloud de bigramas
 wordcloud(bigramas$bigram, bigramas$n, max.words = 20, colors = purple_orange)
 
-# http://dsnotes.com/post/text2vec/
-# https://github.com/ropensci/tokenizers
+bigramas <- bigramas[1:20,]
+p3 <- bigramas %>%
+   ggplot(aes(x = reorder(bigram, n), y = n)) +
+   geom_col() +
+   xlab(NULL) +
+   coord_flip() +
+   theme(panel.background = element_rect(fill='white', colour='gray')) +
+   ylab("Freq") + xlab("Bigrama")
+p3
 
 ```
 
+```{r, echo = FALSE}
+# Dendogramas de bigramas
+hc <- hclust( dist(bigramas$n) )
+plot(hc, labels = bigramas$bigram, main = "Contagem bruta", xlab = "Bigramas")
 
+```
 
+A análise de cluster hierárquica usa o conjunto de diferenças para os objetos em cluster. Inicialmente, cada objeto é atribuído ao seu próprio cluster e, em seguida, o algoritmo prossegue iterativamente, em cada etapa, juntando os dois clusters mais semelhantes, continuando até existir apenas um único cluster. Em cada estágio, as distâncias entre clusters são recalculadas pela fórmula de atualização de dissimilaridade de Lance-Williams, de acordo com o método *complete linkage* que encontra clusters similares.
 
