@@ -2,9 +2,9 @@
 title: "Palavras frequentes"
 output: html_document
 params:
-  ini: 2016
-  fim: 2017
-  partido: "PSDB"
+  ini: 2015
+  fim: 2015
+  partido: "PT"
 ---
 
 ```{r setup, include=FALSE}
@@ -44,67 +44,74 @@ if(!require(gridExtra)) { install.packages('gridExtra') }
 pasta <- "..\\CorporaRDS\\"
 arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
 lista <- readRDS(paste0(pasta, arquivo))
-docs <- lista[[1]]
-tfq  <- lista[[2]]
-bigramas <- lista[[3]]
+docs <- lista$docs
+tfq  <- lista$tfq
+freq_tdm <- lista$freq_tdm
+bigramas <- lista$bigramas
 
 print(sprintf("Partido: %s (%d - %d)", partido, ini, fim))
 print(sprintf("Arquivo: %s", arquivo))
-```
-
-
-```{r}
 
 # define pallette de cores
 purple_orange <- brewer.pal(10, "PuOr")
 # drop 2 faintest colors
 purple_orange <- purple_orange[-(1:2)]
 
-# criando uma tdm com "term frequency-inverse document frequency".
-# The TfIdf score increases by term occurrence but is penalized by the frequency of appearance among all documents.
-# From a common sense perspective, if a term appears often it must be important. This attribute is represented by term frequency (i.e. Tf), which is normalized by the length of the document. However, if the term appears in all documents, it is not likely to be insightful. This is captured in the inverse document frequency (i.e. Idf).
-tdm <- TermDocumentMatrix(docs, control = list(wordLengths = c(3,15), weighting = weightTfIdf))
-
-# Why would you want to adjust the sparsity of the TDM/DTM?
-# TDMs and DTMs are sparse, meaning they contain mostly zeros.
-# A good TDM has between 25 and 70 terms. The lower the sparse value, the more terms are kept. The closer it is to 1, the fewer are kept. This value is a percentage cutoff of zeros for each term in the TDM.
-tdm <- removeSparseTerms(tdm, 0.9999)
-tdm <- as.matrix(tdm)
-freq_tdm <- rowSums(tdm)
-
-freq_tdm <- sort(freq_tdm, decreasing = TRUE)[1:20]
-freq_tdm <- data.frame(WORD = names(freq_tdm), FREQ = freq_tdm)
-
-# define divisao grafico
-par(mfrow = c(1, 2), pty = "s")
-
-# create a wordcloud with purple_orange palette
-# tfq - sem tratamento TfIdf e sparsity
-wordcloud(tfq$WORD, tfq$FREQ, max.words = 20, colors = purple_orange)
-# freq_tdm - com tratamento TfIdf e sparsity
-wordcloud(freq_tdm$WORD, freq_tdm$FREQ, max.words = 20, colors = purple_orange)
 ```
 
+## Nuvem de unigramas
+
 ```{r, echo = FALSE}
-### gráfico com os termos mais frequentes
+# save default, for resetting...
+# def.par <- par(no.readonly = TRUE)
+
+# define divisao grafico
+# par(mfrow = c(1, 2))
+
+# create a wordcloud with purple_orange palette
+```
+
+#### *tfq - contagem bruta*
+
+```{r, echo = FALSE}
+tfq <- tfq[!is.na(tfq$FREQ), ]
+wordcloud(tfq$WORD, tfq$FREQ, max.words = 20, colors = purple_orange, random.order=FALSE)
+```
+
+#### *freq_tdm - tratamento TfIdf e sparsity*
+
+```{r, echo = FALSE}
+freq_tdm <- freq_tdm[!is.na(freq_tdm$FREQ), ]
+wordcloud(freq_tdm$WORD, freq_tdm$FREQ, max.words = 20, colors = purple_orange, random.order=FALSE)
+
+# reset to default
+# par(def.par)
+```
+
+## Freqûencia de unigramas
+
+```{r, echo = FALSE}
+### gráfico com os 20 termos mais frequentes
 p1 <- tfq[1:20,] %>%
    ggplot(aes(x = reorder(WORD, FREQ), y = FREQ)) +
    geom_col() +
    xlab(NULL) +
    coord_flip() +
    theme(panel.background = element_rect(fill='white', colour='gray')) +
-   ylab("Freq") + xlab("Palavra")
+   ylab("Freq") + xlab("Palavra") + ggtitle("Contagem bruta")
 
-p2 <- freq_tdm %>%
+p2 <- freq_tdm[1:20,] %>%
    ggplot(aes(x = reorder(WORD, FREQ), y = FREQ)) +
    geom_col() +
    xlab(NULL) +
    coord_flip() +
    theme(panel.background = element_rect(fill='white', colour='gray')) +
-   ylab("Freq") + xlab("Palavra")
+   ylab("Freq") + xlab("Palavra") + ggtitle("Tratamento TfIdf e sparsity")
 
 grid.arrange(p1, p2)
 ```
+
+## Dendograma de unigramas
 
 ```{r, echo = FALSE}
 # dendogramas
@@ -112,15 +119,22 @@ tfq <- tfq[1:20,]
 hc <- hclust( dist(tfq$FREQ) )
 plot(hc, labels = tfq$WORD, main = "Contagem bruta", xlab = "Palavras")
 
+freq_tdm <- freq_tdm[1:20,]
 hc <- hclust( dist(freq_tdm$FREQ) )
-plot(hc, labels = freq_tdm$WORD, main = "Contagem com TfIdf e Sparsity", xlab = "Palavras")
+plot(hc, labels = freq_tdm$WORD, main = "Tratamento TfIdf e Sparsity", xlab = "Palavras")
 
 ```
 
+## Nuvem de bigramas
+
 ```{r, echo = FALSE}
 # Wordcloud de bigramas
-wordcloud(bigramas$bigram, bigramas$n, max.words = 20, colors = purple_orange)
+wordcloud(bigramas$bigram, bigramas$n, max.words = 20, colors = purple_orange, random.order=FALSE)
+```
 
+## Frequência de bigramas
+
+```{r, echo = FALSE}
 bigramas <- bigramas[1:20,]
 p3 <- bigramas %>%
    ggplot(aes(x = reorder(bigram, n), y = n)) +
@@ -128,10 +142,11 @@ p3 <- bigramas %>%
    xlab(NULL) +
    coord_flip() +
    theme(panel.background = element_rect(fill='white', colour='gray')) +
-   ylab("Freq") + xlab("Bigrama")
+   ylab("Freq") + xlab("Bigrama") + ggtitle("Contagem bruta")
 p3
-
 ```
+
+## Dendograma de bigramas
 
 ```{r, echo = FALSE}
 # Dendogramas de bigramas
@@ -139,6 +154,8 @@ hc <- hclust( dist(bigramas$n) )
 plot(hc, labels = bigramas$bigram, main = "Contagem bruta", xlab = "Bigramas")
 
 ```
+
+### Observações
 
 A análise de cluster hierárquica usa o conjunto de diferenças para os objetos em cluster. Inicialmente, cada objeto é atribuído ao seu próprio cluster e, em seguida, o algoritmo prossegue iterativamente, em cada etapa, juntando os dois clusters mais semelhantes, continuando até existir apenas um único cluster. Em cada estágio, as distâncias entre clusters são recalculadas pela fórmula de atualização de dissimilaridade de Lance-Williams, de acordo com o método *complete linkage* que encontra clusters similares.
 

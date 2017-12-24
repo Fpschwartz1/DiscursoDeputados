@@ -35,28 +35,28 @@ qdap_clean <- function(x){
 }      
 
 # aplicada a corpus
-tm_clean <- function(corpus, stopwords, stopngrams){
+tm_clean <- function(corpus, stopw, stopngram){
   corpus <- tm_map(corpus, content_transformer(tolower))
-  corpus <- tm_map(corpus, removeNumbers)
-  corpus <- tm_map(corpus, removePunctuation)
+  corpus <- tm_map(corpus, removeNumbers, ucp=TRUE)
+  corpus <- tm_map(corpus, removePunctuation, ucp=TRUE)
   
   # remove plural e retira acentos
   corpus <- tm_map(corpus, content_transformer(remove_plural))
   corpus <- tm_map(corpus, content_transformer(retira_acentos))
-  
-  # retira palavras de tamanho {1}
-  corpus <- tm_map(corpus, content_transformer(function(x) gsub('\\b[a-z]{1}\\b', '', x)))
-  
-  # remove stop words
-  corpus <- tm_map(corpus, removeWords, stopwords)
+
+  # remove stopwords
+  corpus <- tm_map(corpus, removeWords, stopw)
   
   # remove espaços
   corpus <- tm_map(corpus, stripWhitespace)
   corpus <- tm_map(corpus, content_transformer(str_trim))
   
   # remove n-grams
-  corpus <- tm_map(corpus, content_transformer(remove_ngramas), stopngrams)
-  
+  corpus <- tm_map(corpus, content_transformer(remove_ngramas), stopngram)
+
+  # retira palavras de tamanho {1}
+  corpus <- tm_map(corpus, content_transformer(function(x) gsub('\\b[a-z]{1}\\b', '', x)))
+    
   # remove espaços
   corpus <- tm_map(corpus, stripWhitespace)
   corpus <- tm_map(corpus, content_transformer(str_trim))
@@ -113,7 +113,11 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
   stopw <- c(stopw, readLines("stopwords_discurso.txt"))
   #### removendo partidos
   stopw <- c(stopw, readLines("stopwords_partidos.txt"))
-  # retira repetições de palavras
+  #### removendo plural das stopwords
+  stopw <- sapply(stopw, remove_plural)
+  #### removendo acentos das stopwords
+  stopw <- retira_acentos(stopw)
+  #### retira repetições de palavras
   stopw <- as.character(levels(as.factor(stopw)))
 
   # removendo n-gramas: bigramas, nomes e outros
@@ -122,6 +126,12 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
   stopngram <- c(stopngram, readLines("stopwords_membros_mesa.txt"))
   stopngram <- c(stopngram, readLines("stopwords_nomes_compostos.txt"))
   stopngram <- c(stopngram, readLines("stopwords_nomes_simples.txt"))
+  #### removendo plural dos ngramas
+  stopngram <- sapply(stopngram, remove_plural)
+  #### removendo acentos dos ngramas
+  stopngram <- retira_acentos(stopngram)
+  #### retira repetições dos ngramas
+  stopngram <- as.character(levels(as.factor(stopngram)))
 
   # limpeza com tm_clean
   print('limpeza do corpus')
@@ -160,8 +170,45 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
   # system.time(tfq <- freq_terms(vdisc, at.least = 3, top = 20))
   # determina termos mais frequentes com freq_terms (qdap)
   print('termos mais frequentes')
-  tfq <- freq_terms(vdisc, at.least = 3, top = 200)
+  tfq <- freq_terms(vdisc, at.least = 3, top = 2000)
 
+  # criando uma tdm com "term frequency-inverse document frequency".
+  # The TfIdf score increases by term occurrence but is penalized by
+  # the frequency of appearance among all documents. From a common 
+  # sense perspective, if a term appears often it must be important. 
+  # This attribute is represented by term frequency (i.e. Tf), which
+  # is normalized by the length of the document. However, if the term
+  # appears in all documents, it is not likely to be insightful. This 
+  # is captured in the inverse document frequency (i.e. Idf).
+  print('aplicando a frequência inversa de documentos')
+  tdm <- TermDocumentMatrix(docs, control = list(wordLengths = c(3,30), weighting = weightTfIdf))
+  ntokens <- tdm$nrow
+  
+  # Why would you want to adjust the sparsity of the TDM/DTM?
+  # TDMs and DTMs are sparse, meaning they contain mostly zeros.
+  # A good TDM has between 25 and 70 terms. The lower the sparse value,
+  # the more terms are kept. The closer it is to 1, the fewer are kept. 
+  # This value is a percentage cutoff of zeros for each term in the TDM.
+  fcz <- 0.9999 # frequência de corte de zeros: % de zeros admissível para cada termo
+  tdm_aux <- removeSparseTerms(tdm, fcz)
+  while(tdm_aux$nrow == tdm$nrow){
+    fcz <- fcz - 0.0001
+    tdm_aux <- removeSparseTerms(tdm_aux, fcz)
+  }
+  tdm <- tdm_aux; rm(tdm_aux)
+  ntokens_fcz <- tdm$nrow
+  tdm <- as.matrix(tdm)
+  freq_tdm <- rowSums(tdm)
+  freq_tdm <- sort(freq_tdm, decreasing = TRUE)[1:2000]
+  freq_tdm <- data.frame(WORD = names(freq_tdm), FREQ = freq_tdm)
+  
+
+  #BigramTokenizer <- function(x){
+  #    unlist(lapply(ngrams(words(x), 2), paste, collapse = " "), use.names = FALSE)
+  #}
+  #tdm <- TermDocumentMatrix(docs, control = list(tokenize = BigramTokenizer))
+  #inspect(removeSparseTerms(tdm[, 1:10], 0.7))
+  
   ###########
   # bigramas
   ###########
@@ -184,8 +231,11 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
   # remove bigramas sem informação
   # bigramas <- bigramas[!(bigramas$bigram %in% readLines("stopbigramas_pt.txt")), ]
   
-  dados <- list(docs, tfq, bigramas)
-  
+  dados <- list(docs = docs, tfq = tfq, ntokens = ntokens, bigramas = bigramas, 
+                sparse_fcz = fcz, ntokens_fcz = ntokens_fcz, freq_tdm = freq_tdm)
+  # tfq, ntokens e bigramas: usados para determinação de collocations e métrica de similaridade de corpus
+  # freq_tdm: passou pelos filtros TfIdf e Sparse e pode ser usado para métrica de similaridade de corpus
+
 # })
 
   arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")

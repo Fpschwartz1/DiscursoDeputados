@@ -1,0 +1,17 @@
+---
+title: "Tópicos no tempo"
+output: html_document
+params:
+  topicos_df: ""
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+if(!require(knitr)){ install.packages('knitr') }
+kable(topicos_df, caption = "Tópicos", format = "pandoc", row.names = FALSE)
+```
+

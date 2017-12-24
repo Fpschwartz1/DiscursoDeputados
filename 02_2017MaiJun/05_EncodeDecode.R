@@ -85,18 +85,21 @@ remove_plural <- function(txt){
   txt <- gsub('\\b(.*)ães\\>\\b', '\\1ão', txt)
   
   # -ais, -éis, -óis, -uis no plural para -al, -el, -ol, -ul no singular
+  txt <- gsub('pais', 'pai', txt) # exceção
   txt <- gsub('\\b(.*)ais\\>\\b', '\\1al', txt)
   txt <- gsub('\\b(.*)éis\\>\\b', '\\1el', txt)
+  txt <- gsub('\\b(.*)seis\\>\\b', '\\1seiis', txt) # exceção
   txt <- gsub('\\b(.*)eis\\>\\b', '\\1el', txt)
   txt <- gsub('\\b(.*)óis\\>\\b', '\\1ol', txt)
   txt <- gsub('\\b(.*)uis\\>\\b', '\\1ul', txt)
   
   # substantivos terminados em -r, -z e -s formam plural acrescentado-se -es
+  txt <- gsub('\\b(.*)sses\\>\\b', '\\1sse', txt) # exceção
   txt <- gsub('\\b(.*)([rsz])es\\>\\b', '\\1\\2', txt)
   
   # -ens -ins -ons -uns
   txt <- gsub('\\b(.*)([éeiou])ns\\>\\b', '\\1\\2m', txt)
-
+  
   # -qu
   txt <- gsub('\\b(.*)quas\\>\\b', '\\1qua', txt)
   txt <- gsub('\\b(.*)ques\\>\\b', '\\1que', txt)
@@ -121,4 +124,3 @@ remove_plural <- function(txt){
 
   stri_c_list(list(txt), sep=" ")
 }
-

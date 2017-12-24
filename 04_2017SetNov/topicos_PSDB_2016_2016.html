@@ -9,7 +9,6 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Fabiano Peruzzo Schwartz" />
 
 
 <title>Tópicos</title>
@@ -117,63 +116,84 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Tópicos</h1>
-<h4 class="author"><em>Fabiano Peruzzo Schwartz</em></h4>
 
 </div>
 
 
-<pre><code>## [1] &quot;Partido: PT (2003 - 2015)&quot;</code></pre>
-<pre><code>## [1] &quot;Arquivo: topicos_PT_2003_2015.rds&quot;</code></pre>
+<pre><code>## [1] &quot;Partido: PSDB (2016 - 2016)&quot;</code></pre>
+<pre><code>## [1] &quot;Arquivo: topicos_PSDB_2016_2016.rds&quot;</code></pre>
 <pre class="r"><code># VEM
 termos[[1]]</code></pre>
-<pre><code>##       Topic 1        Topic 2    Topic 3        Topic 4     Topic 5      
-##  [1,] &quot;educacao&quot;     &quot;deus&quot;     &quot;saude&quot;        &quot;pt&quot;        &quot;producao&quot;   
-##  [2,] &quot;saude&quot;        &quot;luta&quot;     &quot;uniao&quot;        &quot;cpi&quot;       &quot;crescimento&quot;
-##  [3,] &quot;ensino&quot;       &quot;homem&quot;    &quot;reforma&quot;      &quot;justica&quot;   &quot;economia&quot;   
-##  [4,] &quot;criancas&quot;     &quot;cultura&quot;  &quot;servidores&quot;   &quot;oposicao&quot;  &quot;agricultura&quot;
-##  [5,] &quot;violencia&quot;    &quot;igreja&quot;   &quot;constituicao&quot; &quot;policia&quot;   &quot;empresas&quot;   
-##  [6,] &quot;jovens&quot;       &quot;terra&quot;    &quot;salario&quot;      &quot;acordo&quot;    &quot;paises&quot;     
-##  [7,] &quot;direitos&quot;     &quot;familia&quot;  &quot;publicos&quot;     &quot;corrupcao&quot; &quot;energia&quot;    
-##  [8,] &quot;universidade&quot; &quot;brasilia&quot; &quot;minimo&quot;       &quot;direito&quot;   &quot;mercado&quot;    
-##  [9,] &quot;seguranca&quot;    &quot;brizola&quot;  &quot;orcamento&quot;    &quot;disse&quot;     &quot;ambiente&quot;   
-## [10,] &quot;familias&quot;     &quot;filho&quot;    &quot;emendas&quot;      &quot;dinheiro&quot;  &quot;renda&quot;</code></pre>
+<pre><code>##       Topic 1         Topic 2      Topic 3     Topic 4       
+##  [1,] &quot;previdencia&quot;   &quot;direito&quot;    &quot;militar&quot;   &quot;educacao&quot;    
+##  [2,] &quot;reforma&quot;       &quot;corrupcao&quot;  &quot;policia&quot;   &quot;ensino&quot;      
+##  [3,] &quot;direito&quot;       &quot;crime&quot;      &quot;policial&quot;  &quot;medio&quot;       
+##  [4,] &quot;aposentadoria&quot; &quot;juiz&quot;       &quot;direito&quot;   &quot;escola&quot;      
+##  [5,] &quot;idade&quot;         &quot;supremo&quot;    &quot;seguranca&quot; &quot;saude&quot;       
+##  [6,] &quot;golpe&quot;         &quot;judiciario&quot; &quot;tema&quot;      &quot;jovem&quot;       
+##  [7,] &quot;salario&quot;       &quot;mulher&quot;     &quot;justica&quot;   &quot;reforma&quot;     
+##  [8,] &quot;crise&quot;         &quot;tribunal&quot;   &quot;amin&quot;      &quot;fiscal&quot;      
+##  [9,] &quot;contribuicao&quot;  &quot;humano&quot;     &quot;defesa&quot;    &quot;investimento&quot;
+## [10,] &quot;saude&quot;         &quot;aborto&quot;     &quot;crime&quot;     &quot;energia&quot;     
+##       Topic 5       
+##  [1,] &quot;moeda&quot;       
+##  [2,] &quot;mulher&quot;      
+##  [3,] &quot;direito&quot;     
+##  [4,] &quot;universidade&quot;
+##  [5,] &quot;ceara&quot;       
+##  [6,] &quot;membro&quot;      
+##  [7,] &quot;associacao&quot;  
+##  [8,] &quot;maria&quot;       
+##  [9,] &quot;central&quot;     
+## [10,] &quot;santo&quot;</code></pre>
 <pre class="r"><code># VEM fixed
 termos[[2]]</code></pre>
-<pre><code>##       Topic 1        Topic 2   Topic 3        Topic 4     Topic 5        
-##  [1,] &quot;educacao&quot;     &quot;luta&quot;    &quot;saude&quot;        &quot;justica&quot;   &quot;producao&quot;     
-##  [2,] &quot;salario&quot;      &quot;homem&quot;   &quot;uniao&quot;        &quot;pt&quot;        &quot;crescimento&quot;  
-##  [3,] &quot;minimo&quot;       &quot;deus&quot;    &quot;publicos&quot;     &quot;policia&quot;   &quot;empresas&quot;     
-##  [4,] &quot;ensino&quot;       &quot;cultura&quot; &quot;reforma&quot;      &quot;cpi&quot;       &quot;economia&quot;     
-##  [5,] &quot;criancas&quot;     &quot;terra&quot;   &quot;servidores&quot;   &quot;oposicao&quot;  &quot;agricultura&quot;  
-##  [6,] &quot;violencia&quot;    &quot;filho&quot;   &quot;servicos&quot;     &quot;direito&quot;   &quot;paises&quot;       
-##  [7,] &quot;jovens&quot;       &quot;familia&quot; &quot;constituicao&quot; &quot;corrupcao&quot; &quot;ambiente&quot;     
-##  [8,] &quot;familias&quot;     &quot;ceara&quot;   &quot;orcamento&quot;    &quot;dinheiro&quot;  &quot;mercado&quot;      
-##  [9,] &quot;universidade&quot; &quot;igreja&quot;  &quot;emendas&quot;      &quot;disse&quot;     &quot;investimentos&quot;
-## [10,] &quot;cidades&quot;      &quot;paz&quot;     &quot;prefeitos&quot;    &quot;tribunal&quot;  &quot;energia&quot;</code></pre>
+<pre><code>##       Topic 1         Topic 2      Topic 3            Topic 4       
+##  [1,] &quot;previdencia&quot;   &quot;direito&quot;    &quot;militar&quot;          &quot;educacao&quot;    
+##  [2,] &quot;reforma&quot;       &quot;corrupcao&quot;  &quot;policia&quot;          &quot;ensino&quot;      
+##  [3,] &quot;direito&quot;       &quot;supremo&quot;    &quot;policial&quot;         &quot;medio&quot;       
+##  [4,] &quot;idade&quot;         &quot;juiz&quot;       &quot;seguranca&quot;        &quot;escola&quot;      
+##  [5,] &quot;divida&quot;        &quot;tribunal&quot;   &quot;direito&quot;          &quot;saude&quot;       
+##  [6,] &quot;aposentadoria&quot; &quot;humano&quot;     &quot;crime&quot;            &quot;jovem&quot;       
+##  [7,] &quot;contribuicao&quot;  &quot;judiciario&quot; &quot;tema&quot;             &quot;estudante&quot;   
+##  [8,] &quot;dinheiro&quot;      &quot;crime&quot;      &quot;responsabilidade&quot; &quot;fiscal&quot;      
+##  [9,] &quot;salario&quot;       &quot;violencia&quot;  &quot;pessoa&quot;           &quot;resultado&quot;   
+## [10,] &quot;golpe&quot;         &quot;luta&quot;       &quot;precisa&quot;          &quot;profissional&quot;
+##       Topic 5       
+##  [1,] &quot;moeda&quot;       
+##  [2,] &quot;mulher&quot;      
+##  [3,] &quot;direito&quot;     
+##  [4,] &quot;associacao&quot;  
+##  [5,] &quot;ceara&quot;       
+##  [6,] &quot;membro&quot;      
+##  [7,] &quot;universidade&quot;
+##  [8,] &quot;brasilia&quot;    
+##  [9,] &quot;maria&quot;       
+## [10,] &quot;banco&quot;</code></pre>
 <pre class="r"><code># Gibbs
 termos[[3]]</code></pre>
-<pre><code>##       Topic 1        Topic 2        Topic 3       Topic 4    
-##  [1,] &quot;luta&quot;         &quot;constituicao&quot; &quot;producao&quot;    &quot;pt&quot;       
-##  [2,] &quot;deus&quot;         &quot;acordo&quot;       &quot;agricultura&quot; &quot;seguranca&quot;
-##  [3,] &quot;homem&quot;        &quot;reforma&quot;      &quot;paises&quot;      &quot;policia&quot;  
-##  [4,] &quot;cultura&quot;      &quot;justica&quot;      &quot;ambiente&quot;    &quot;violencia&quot;
-##  [5,] &quot;brasilia&quot;     &quot;direito&quot;      &quot;energia&quot;     &quot;cpi&quot;      
-##  [6,] &quot;familia&quot;      &quot;partidos&quot;     &quot;nordeste&quot;    &quot;dinheiro&quot; 
-##  [7,] &quot;mulheres&quot;     &quot;tribunal&quot;     &quot;agua&quot;        &quot;justica&quot;  
-##  [8,] &quot;filho&quot;        &quot;executivo&quot;    &quot;amazonia&quot;    &quot;imprensa&quot; 
-##  [9,] &quot;universidade&quot; &quot;medidas&quot;      &quot;areas&quot;       &quot;corrupcao&quot;
-## [10,] &quot;frente&quot;       &quot;emendas&quot;      &quot;norte&quot;       &quot;disse&quot;    
+<pre><code>##       Topic 1      Topic 2        Topic 3         Topic 4      
+##  [1,] &quot;corrupcao&quot;  &quot;educacao&quot;     &quot;luta&quot;          &quot;reforma&quot;    
+##  [2,] &quot;policia&quot;    &quot;ensino&quot;       &quot;homem&quot;         &quot;previdencia&quot;
+##  [3,] &quot;crime&quot;      &quot;medio&quot;        &quot;filho&quot;         &quot;moeda&quot;      
+##  [4,] &quot;militar&quot;    &quot;escola&quot;       &quot;representante&quot; &quot;crise&quot;      
+##  [5,] &quot;juiz&quot;       &quot;saude&quot;        &quot;brasilia&quot;      &quot;banco&quot;      
+##  [6,] &quot;judiciario&quot; &quot;ceara&quot;        &quot;movimento&quot;     &quot;idade&quot;      
+##  [7,] &quot;policial&quot;   &quot;comunicacao&quot;  &quot;campo&quot;         &quot;economica&quot;  
+##  [8,] &quot;cidadao&quot;    &quot;jovem&quot;        &quot;junto&quot;         &quot;divida&quot;     
+##  [9,] &quot;autoridade&quot; &quot;professor&quot;    &quot;familia&quot;       &quot;fiscal&quot;     
+## [10,] &quot;lavajato&quot;   &quot;profissional&quot; &quot;amigo&quot;         &quot;seguranca&quot;  
 ##       Topic 5      
-##  [1,] &quot;saude&quot;      
-##  [2,] &quot;educacao&quot;   
-##  [3,] &quot;renda&quot;      
-##  [4,] &quot;salario&quot;    
-##  [5,] &quot;minimo&quot;     
-##  [6,] &quot;aumento&quot;    
-##  [7,] &quot;ensino&quot;     
-##  [8,] &quot;crescimento&quot;
-##  [9,] &quot;servicos&quot;   
-## [10,] &quot;r&quot;</code></pre>
+##  [1,] &quot;direito&quot;    
+##  [2,] &quot;mulher&quot;     
+##  [3,] &quot;defesa&quot;     
+##  [4,] &quot;violencia&quot;  
+##  [5,] &quot;associacao&quot; 
+##  [6,] &quot;pessoa&quot;     
+##  [7,] &quot;crianca&quot;    
+##  [8,] &quot;tribunal&quot;   
+##  [9,] &quot;secretaria&quot; 
+## [10,] &quot;deficiencia&quot;</code></pre>
 
 
 

@@ -14,13 +14,12 @@ arquivo <- c(
 for(arq in arquivo) {
   stopw <- readLines(arq)
   
+  #stopw <- sapply(stopw, remove_plural)
+  #stopw <- retira_acentos(stopw)
+  
   stopw <- as.character(levels(as.factor(stopw)))
   
-  stopw <- retira_acentos(stopw)
-  
   stopw <- stopw[stopw != ""]
-  
-  stopw <- sapply(stopw, remove_plural)
   
   write.table(stopw, arq, quote = FALSE, row.names = FALSE, col.names = FALSE)
 }

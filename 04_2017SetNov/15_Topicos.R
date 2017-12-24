@@ -1,22 +1,24 @@
 
 # parâmetros da análise
-ini <- 2016
-fim <- 2016
-partido <- "PSDB"
+# ini <- 2015
+# fim <- 2015
+# partido <- "PT"
 
-pasta_topicos <- "..\\Topicos\\"
-arq_topicos <- paste0(pasta_topicos, "topicos_", partido, "_", ini, "_", fim, ".rds")
+if(!require(tm)) { install.packages('tm') }
+if(!require(qdap)) { install.packages('qdap') }
+if(!require(RWeka)) { install.packages('RWeka') }
+
+if(!require(tidyverse)) { install.packages('tidyverse') }
+if(!require(tidytext)) { install.packages('tidytext') }
+if(!require(tidyr)) { install.packages('tidyr') }
+if(!require(dplyr)) { install.packages('dplyr') }
+
+if(!require(quanteda)) { install.packages('quanteda') }
 
 # se o arquivo de tópicos não existir, efetua toda a análise
-if(!file.exists(arq_topicos)){
-  if(!require(tm)) { install.packages('tm') }
-  if(!require(qdap)) { install.packages('qdap') }
-  if(!require(RWeka)) { install.packages('RWeka') }
-  
-  if(!require(tidyverse)) { install.packages('tidyverse') }
-  if(!require(tidytext)) { install.packages('tidytext') }
-  if(!require(tidyr)) { install.packages('tidyr') }
-  if(!require(dplyr)) { install.packages('dplyr') }
+topicos_discurso <- function(ini, fim, partido){
+
+  print(paste0(partido, " - ", ini, " a ", fim))
   
   # lê arquivo de corpora 
   pasta_corpora <- "..\\CorporaRDS\\"
@@ -25,8 +27,7 @@ if(!file.exists(arq_topicos)){
   docs <- lista[[1]]
   
   # monta vetor de textots para utilização do pacote quanteda
-  if(!require(quanteda)) { install.packages('quanteda') }
-  
+  print('reconstrução do vetor de discursos')
   docs <- docs$content
   n <- length(docs)
   vdisc <- vector("character", n)
@@ -46,7 +47,8 @@ if(!file.exists(arq_topicos)){
   
   # remove termos pouco frequentes
   # http://stats.stackexchange.com/questions/160539/is-this-interpretation-of-sparsity-accurate/160599#160599
-  sparsityThreshold <- round(ndoc(myDfm) * (1 - 0.99999))
+  print('remove termos esparsos')
+  sparsityThreshold <- round(ndoc(myDfm) * (1 - 0.9999))
   myDfm <- dfm_trim(myDfm, min_docfreq = sparsityThreshold)
   nfeature(myDfm)
   
@@ -81,16 +83,12 @@ if(!file.exists(arq_topicos)){
   
   termos <- list(VEM, VEM_fixed, GIBBGS)
   
+  pasta_topicos <- "..\\Topicos\\"
+  arq_topicos <- paste0(pasta_topicos, "topicos_", partido, "_", ini, "_", fim, ".rds")
+
   saveRDS(termos, arq_topicos)  
 }
 
-if(!require(knitr)) { install.packages('knitr') }
-if(!require(markdown)) { install.packages('markdown') }
-if(!require(rmarkdown)) { install.packages('rmarkdown') }
-
-arq_html <- paste0(pasta_topicos, "topicos_", partido, "_", ini, "_", fim, ".html")
-
-rmarkdown::render('13_Topicos.Rmd', output_file = arq_html)
 
 
 # Exemplo de clusterização

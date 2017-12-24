@@ -1,7 +1,10 @@
 ---
 title: "Tópicos"
-author: "Fabiano Peruzzo Schwartz"
 output: html_document
+params:
+  ini: 2016
+  fim: 2017
+  partido: "PSDB"
 ---
 
 ```{r setup, include=FALSE}

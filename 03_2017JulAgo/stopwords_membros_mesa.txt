@@ -3,13 +3,13 @@ alex canziani
 alexandre silveira
 andre fufuca
 andre varga
-antonio carlo magalhao neto
+antonio carlos magalhães neto
 arlindo chinaglia
 arnon bezerra
 beto mansur
 biffi
-carlo eduardo cadoca
-carlo manato
+carlos eduardo cadoca
+carlos manato
 cesar halum
 ciro nogueira
 confucio moura
@@ -17,7 +17,7 @@ dagoberto nogueira
 deley
 edmar moreira
 eduardo cunha
-eduardo da fonte
+eduardo fonte
 eduardo gome
 fabio faria
 fabio ramalho
@@ -29,14 +29,16 @@ gilberto nascimento
 giovanni queiroz
 givaldo carimbao
 gonzaga patriota
-henrique eduardo alve
+henrique eduardo alves
+henrique alves
+ianne lim
 inocencio oliveira
 jhc
 joao calda
 joao paulo cunha
 jorge alberto
 jorge tadeu mudalen
-jose carlo machado
+jose carlos machado
 jose thomaz nono
 julio delgado
 leandro sampaio
@@ -73,3 +75,4 @@ waldemir moka
 waldir maranhao
 wilson santo
 wolney queiroz
+isamar pessoa
