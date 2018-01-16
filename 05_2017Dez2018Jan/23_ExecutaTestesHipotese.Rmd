@@ -1,0 +1,234 @@
+---
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Testes de Hipótese
+
+Executa testes de hipótese para a verificação de *collocations* e da *similaridade* entre discursos.
+
+Os discursos são respectivos aos pequeno e grande expedientes das sessões consideradas relevantes (filtro no arquivo 10_CorporaPorCriterios.R).
+
+```{r, echo=FALSE}
+
+# carrega bibliotecas e pacotes
+source("22_TesteHipotese.R")
+source("..\\03_2017JulAgo\\10_CorporaPorCriterios.R")
+source("..\\03_2017JulAgo\\11_LimpaCorporaParaAnalise.R")
+library(stringr)
+library(dplyr)
+
+```
+
+### Período da análise
+
+```{r}
+ini <- 2003
+fim <- 2015
+
+anos <- as.character(ini:fim)
+```
+
+### Partidos da análise
+
+Dado o período de análise, verificam-se os partidos existentes na tabela coalizões (coalizoes.csv).
+
+```{r}
+# lê base de discursos
+discursos <- readRDS("..\\DadosRDS\\discurso_2000_2017.rds")
+discursos <- discursos[  str_sub(discursos$dataSessao,7,10) >= ini 
+                       & str_sub(discursos$dataSessao,7,10) <= fim
+                       & !(discursos$partidoOrador %in% c("", "40211", "SEM PARTIDO", "REGISTRO PPS")), ]
+discursos$partidoOrador <- str_to_upper(discursos$partidoOrador)
+discursos$partidoOrador[discursos$partidoOrador == "PDSB"] <- "PSDB"
+# carrega coalizões
+coalizoes <- read.csv("coalizoes.csv", sep=";")
+coalizoes <- coalizoes[coalizoes$Ano >= ini & coalizoes$Ano <= fim, ]
+coalizoes$Partido <- as.character(coalizoes$Partido)
+coalizoes$Partido <- str_to_upper(coalizoes$Partido)
+# verifica partidos transformados na tabela coalizões
+ptrans <- levels(as.factor(coalizoes$Partido[!is.na(str_match(coalizoes$Partido, ">"))]))
+for(i in 1:length(ptrans)){
+  p <- str_split(ptrans[i] ,">")[[1]]
+  # substitui nome original pelo nome atual
+  discursos$partidoOrador[discursos$partidoOrador == p[1]] <- p[2]
+  coalizoes$Partido[coalizoes$Partido == ptrans[i]] <- p[2]
+}
+
+# reduz discursos apenas aos partidos disponíveis na tabela coalizões
+discursos <- discursos[discursos$partidoOrador %in% levels(as.factor(coalizoes$Partido)), ]
+
+# monta lista de partidos para cada ano do período
+lpartidos <- vector("list", length(ini:fim))
+names(lpartidos) <- anos
+for(ano in anos){
+  partidos <- discursos[str_sub(discursos$dataSessao,7,10) == ano, "partidoOrador"]
+  partidos <- levels(as.factor(partidos))
+  # partidos em discurso que estejam em coalizões
+  partidos <- partidos[partidos %in% levels(as.factor(coalizoes$Partido[coalizoes$Ano == ano]))]
+  lpartidos[[ano]] <- partidos
+}
+
+# caso não exista corpora, deve-se gerar: geracorpora <- TRUE
+geracorpora <- FALSE
+if(geracorpora){
+  for(ano in ini:fim){ 
+    lpartidos_aux <- lpartidos[[as.character(ano)]]
+    for(partido in lpartidos_aux){
+      
+      if(corpora_por_criterios(discursos, ano, ano, partido, c("GE", "PE"))){
+        limpa_corpora(ano, ano, partido)  
+      } 
+      
+    }
+  }
+}
+
+```
+
+### Constrói data frame (dplyr) com indicador de coalizões
+
+```{r}
+
+coalizoes <- tbl_df(coalizoes)
+coalizoes <- coalizoes %>% 
+  filter(Ano >= ini, Ano <= fim) %>%
+  group_by(Ano, Partido) %>%
+  summarise(flCoalizao = mean(flagCoalizao))
+coalizoes <- mutate(coalizoes, lflCoalizao = flCoalizao > 0)
+
+```
+
+### Constrói tabelas de dissimilaridade
+
+Executa teste qui-quadrado para avaliação de similaridade.  
+Aqui a medida de similaridade é efetuada em corpus homogêneos (discurso parlamentar)  
+Rejeitar Ho (p < 0.05) significa dissimilaridade
+
+```{r}
+# qtd de termos comparados
+n <- 500
+# lista com tabelas de dissimilaridade
+ltdis <- vector("list", length(anos))
+names(ltdis) <- anos
+# para cada ano
+for(ano in anos) {
+  # lista de data.frames com discursos partido-ano
+  ldfpa <- vector("list", length(lpartidos[[ano]]))
+  names(ldfpa) <- lpartidos[[ano]]
+
+  for(partido in lpartidos[[ano]]){
+
+    arq <- paste0("..\\CorporaRDS\\corpora_", partido, "_", ano, "_", ano, "_limpo.rds")
+
+    if(file.exists(arq)){
+      ldfpa[[partido]] <- readRDS(arq) 
+      if(nrow(ldfpa[[partido]]$bigramas) == 0){
+        lpartidos[[ano]] <- lpartidos[[ano]][ !(lpartidos[[ano]] %in% partido) ]
+      }
+    } else{
+      lpartidos[[ano]] <- lpartidos[[ano]][ !(lpartidos[[ano]] %in% partido) ]
+    }
+  }
+  
+  # quantidade de partidos
+  np <- length(lpartidos[[ano]])
+  
+  # matriz de dissimilaridade
+  mdis <- matrix(0, np, np)
+  rownames(mdis) <- colnames(mdis) <- lpartidos[[ano]]
+  
+  # atribui 1 para a diagonal
+  for(i in 1:nrow(mdis)) mdis[i,i] <- 1
+  
+  for(i in 1:(nrow(mdis)-1)){
+    for(j in (i+1):nrow(mdis)){
+      # print(paste(ano, i, j))
+      mdis[i, j] <- corpus_similaridade(ldfpa[[lpartidos[[ano]][i]]]$bigramas,
+                                        ldfpa[[lpartidos[[ano]][j]]]$bigramas,
+                                        nrow(ldfpa[[lpartidos[[ano]][i]]]$bigramas),
+                                        nrow(ldfpa[[lpartidos[[ano]][j]]]$bigramas),
+                                        n)[2]
+      mdis[i, j] <- mdis[j, i] <- round(mdis[i, j],5)
+      
+    }
+  }
+
+  # maiúsculo significa coalizão
+  vcoalizoes <- coalizoes$lflCoalizao[coalizoes$Ano == ano & (coalizoes$Partido %in% lpartidos[[ano]])]
+  names(vcoalizoes) <- coalizoes$Partido[coalizoes$Ano == ano & (coalizoes$Partido %in% lpartidos[[ano]])]
+  rownames(mdis)[!vcoalizoes] <- colnames(mdis)[!vcoalizoes] <- str_to_lower(lpartidos[[ano]][!vcoalizoes])
+
+  #########################################
+  # indicadores de similaridade de discurso
+  #########################################
+  # similiridade na coalizão
+  icoa <- vector("numeric",np)
+  for(l in 1:np){
+    if(vcoalizoes[l]){
+      aux <- mdis[l,][-l]
+      icoa[l] <- mean(aux[vcoalizoes[-l]])
+    } else {
+      icoa[l] <- NA
+    } 
+  }
+  icoa
+  
+  # similiridade na oposição
+  iopo <- vector("numeric",np)
+  for(l in 1:np){
+    if(!vcoalizoes[l]){
+      aux <- mdis[l,][-l]
+      iopo[l] <- mean(aux[!vcoalizoes[-l]])
+    } else {
+      iopo[l] <- NA
+    } 
+  }
+  iopo
+  
+  # similiridade entre coalizão e oposição
+  ico <- vector("numeric",np)
+  for(l in 1:np){
+    if(vcoalizoes[l]){ # partido de coalizão?
+      # determina média dos partidos de oposição    
+      ico[l] <- mean(mdis[l,!vcoalizoes])
+    } else { # partido de oposição?
+      ico[l] <- mean(mdis[l,vcoalizoes])
+    } 
+  }
+  ico
+  
+  mdis <- cbind(mdis, icoa, iopo, ico)
+    
+  ltdis[[ano]] <- mdis
+
+}
+rm(ldfpa)
+```
+
+### Plota índices de similaridade médios
+
+```{r}
+
+vicoa <- vector("numeric", length(ini:fim))
+viopo <- vector("numeric", length(ini:fim))
+vico  <- vector("numeric", length(ini:fim))
+
+# determina índices médios
+for(i in 1:length(ltdis)){
+  vicoa[i] <- mean(ltdis[[i]][,'icoa'], na.rm = TRUE)
+  viopo[i] <- mean(ltdis[[i]][,'iopo'], na.rm = TRUE)
+  vico[i]  <- mean(ltdis[[i]][,'ico'], na.rm = TRUE)
+}
+
+plot(ini:fim, vico, type = "o", col = "red", ylab = "índice de similaridade", xlab = "ano")
+lines(ini:fim, vicoa, type = "o", col = "blue")
+lines(ini:fim, viopo, type = "o", col = "green")
+grid()
+```
+
+
+

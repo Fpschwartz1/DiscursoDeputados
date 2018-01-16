@@ -97,7 +97,11 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
   # lê arquivo com todos os discursos
   pasta <- "..\\CorporaRDS\\"
   arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, ".rds")
-  vdisc <- readRDS(paste0(pasta, arquivo))
+  if(file.exists(paste0(pasta, arquivo))){
+    vdisc <- readRDS(paste0(pasta, arquivo))  
+  } else {
+    return(FALSE)
+  }
 
   # Para fazer um corpus volátil, R precisa interpretar cada 
   # elemento no vetor de discursos **vdisc** como um documento. 
@@ -108,11 +112,11 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
   docs <- VCorpus(docs) # corpus volátil
 
   #### removendo stopwords
-  stopw <- readLines("stopwords_portugues.txt")
+  stopw <- readLines("..\\03_stopwords\\stopwords_portugues.txt")
   #### removendo palavras com pouca informação
-  stopw <- c(stopw, readLines("stopwords_discurso.txt"))
+  stopw <- c(stopw, readLines("..\\03_stopwords\\stopwords_discurso.txt"))
   #### removendo partidos
-  stopw <- c(stopw, readLines("stopwords_partidos.txt"))
+  stopw <- c(stopw, readLines("..\\03_stopwords\\stopwords_partidos.txt"))
   #### removendo plural das stopwords
   stopw <- sapply(stopw, remove_plural)
   #### removendo acentos das stopwords
@@ -122,10 +126,10 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
 
   # removendo n-gramas: bigramas, nomes e outros
   # stopngram deve ser contruido na ordem em que está
-  stopngram <- readLines("stopwords_bigramas.txt")
-  stopngram <- c(stopngram, readLines("stopwords_membros_mesa.txt"))
-  stopngram <- c(stopngram, readLines("stopwords_nomes_compostos.txt"))
-  stopngram <- c(stopngram, readLines("stopwords_nomes_simples.txt"))
+  stopngram <- readLines("..\\03_stopwords\\stopwords_bigramas.txt")
+  stopngram <- c(stopngram, readLines("..\\03_stopwords\\stopwords_membros_mesa.txt"))
+  stopngram <- c(stopngram, readLines("..\\03_stopwords\\stopwords_nomes_compostos.txt"))
+  stopngram <- c(stopngram, readLines("..\\03_stopwords\\stopwords_nomes_simples.txt"))
   #### removendo plural dos ngramas
   stopngram <- sapply(stopngram, remove_plural)
   #### removendo acentos dos ngramas
@@ -195,7 +199,10 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
     fcz <- fcz - 0.0001
     tdm_aux <- removeSparseTerms(tdm_aux, fcz)
   }
-  tdm <- tdm_aux; rm(tdm_aux)
+  if(tdm_aux$nrow > 0){
+    tdm <- tdm_aux
+  }
+  rm(tdm_aux)
   ntokens_fcz <- tdm$nrow
   tdm <- as.matrix(tdm)
   freq_tdm <- rowSums(tdm)
@@ -240,6 +247,8 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
 
   arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
   saveRDS(dados, paste0(pasta, arquivo))
+  
+  return(TRUE)
 }
 
 # remove todas as variáveis, menos os parâmetros ini, fim e partido

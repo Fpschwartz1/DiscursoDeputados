@@ -10,14 +10,14 @@ No processamento de linguagem natural, a Alocação Latente de Dirichlet é um m
 Por exemplo, se as observações são palavras coletadas em documentos, ele postula que cada documento é uma mistura de um pequeno número de tópicos e que a criação de cada palavra é atribuível a um dos tópicos do documento.
 Os modelos de tópicos agrupam tanto documentos que usam palavras semelhantes, quanto palavras que ocorrem em um conjunto de documentos semelhantes.
 
-[Topic model](https://en.wikipedia.org/wiki/Topic_model)
+[Topic model](https://en.wikipedia.org/wiki/Topic_model)  
 [LDA](https://en.wikipedia.org/wiki/Latent_Dirichlet_allocation)
 
 ### 15_Topicos.Rmd
 
 Lê arquivos do tipo "topicos_partido_ini_fim.rds" e apresenta os tópicos encontrados de acordo com os métodos (VEM e Gibbs) aplicados.
 
-Exemplo:
+Exemplo:  
 ["topicos_PSDB_2016_2016.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/blob/master/04_2017SetNov/topicos_PSDB_2016_2016.html)  
 ["topicos_PT_2016_2016.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/blob/master/04_2017SetNov/topicos_PT_2016_2016.html)  
 
@@ -29,7 +29,7 @@ Faz chamadas à função **topicos_discurso** e ao arquivo "15_Topicos.Rmd" de f
 
 Consolida no arquivo "topicos.html", na pasta '..\Topicos', os tópicos identificados por meio da observação de unigramas e bigramas, e da aplicação da LDA. 
 
-Exemplo:
+Exemplo:  
 ["topicos.html"](http://htmlpreview.github.com/?https://github.com/Fpschwartz1/DiscursoDeputados/blob/master/04_2017SetNov/topicos.html)  
 
 ### 18_TemasNoTempo.Rmd

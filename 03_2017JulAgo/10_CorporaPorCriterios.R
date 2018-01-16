@@ -5,15 +5,21 @@ if(!require(stringi)) { install.packages('stringi') }
 source("..\\02_2017MaiJun\\05_EncodeDecode.R")
 source("..\\02_2017MaiJun\\07_CorporaRetiraQuadrosFiguras.R")
 
-corpora_por_criterios <- function(ini, fim, partido){
+corpora_por_criterios <- function(discursos, ini, fim, partido, codigoFase = NULL){
   print(sprintf("Partido: %s (%d - %d)", partido, ini, fim))
   
-  # lê arquivo com todos os discursos
+  # pasta com os arquivos "discurso_AAAA_dit.rds"
   pastaorig <- "..\\DadosRDS\\"
-  discursos <- readRDS(paste0(pastaorig, "discurso_2000_2017.rds"))
+  
+  # altera nome da primeira coluna do data.frame discursos
   names(discursos)[1] <- "seq"
-  
-  
+
+  # se o vetor de código das fases das sessões for nulo, 
+  # carrega com todos os códigos da base: "AB" "BC" "CG" "EN" "GE" "HO" "OD" "PE"
+  if(is.null(codigoFase)){
+    codigoFase <- levels(as.factor(discursos$codigoFase))
+  }
+
   ### Verifica frequência de [sessões](http://www2.camara.leg.br/comunicacao/assessoria-de-imprensa/sessoes-do-plenario) por tipo e restringe às sessões relevantes
   # frequência por tipo de sessao
   tipo_sessao <- table(discursos$tipoSessao)
@@ -30,8 +36,13 @@ corpora_por_criterios <- function(ini, fim, partido){
   discursos <- discursos[  str_sub(discursos$dataSessao,7,10) >= ini 
                            & str_sub(discursos$dataSessao,7,10) <= fim 
                            & discursos$partidoOrador == partido
+                           & discursos$codigoFase %in% codigoFase
                            , 
                            ]
+  if(nrow(discursos) == 0){
+    print(paste('Não foi encontrado discurso para as condições informadas: ', ini, ', ', fim, ', ', partido, ', ', codigoFase ))
+    return(FALSE)
+  }
   print(paste('Dimensões do arquivo de discurso:', stri_c_list(list(dim(discursos)), sep=" ")))
   
   
@@ -86,6 +97,8 @@ corpora_por_criterios <- function(ini, fim, partido){
   pt2 <- proc.time()
   
   print(paste('Tempo de processamento:', stri_c_list(list((pt2 - pt1)[3]), sep=" ")))
+  
+  return(TRUE)
 }
 
 # remove todas as variáveis, menos os parâmetros ini, fim e partido
