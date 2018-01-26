@@ -148,12 +148,12 @@ bigramasPTB <- testa_collocations(PTB$bigramas, PTB$tfq, PTB$ntokens, 20)
 
 # teste chi
 ano <- 2010
-PT <- readRDS(paste0("..\\CorporaRDS\\corpora_PT_", ano, "_", ano, "_limpo.rds"))
-PSDB <- readRDS(paste0("..\\CorporaRDS\\corpora_PSDB_", ano, "_", ano, "_limpo.rds"))
-PMDB <- readRDS(paste0("..\\CorporaRDS\\corpora_PMDB_", ano, "_", ano, "_limpo.rds"))
-PSOL <- readRDS(paste0("..\\CorporaRDS\\corpora_PSOL_", ano, "_", ano, "_limpo.rds"))
-PCDOB <- readRDS(paste0("..\\CorporaRDS\\corpora_PCDOB_", ano, "_", ano, "_limpo.rds"))
-PTB <- readRDS(paste0("..\\CorporaRDS\\corpora_PTB_", ano, "_", ano, "_limpo.rds"))
+PT <- readRDS(paste0("..\\CorpusRDS\\corpus_PT_", ano, "_", ano, "_limpo.rds"))
+PSDB <- readRDS(paste0("..\\CorpusRDS\\corpus_PSDB_", ano, "_", ano, "_limpo.rds"))
+PMDB <- readRDS(paste0("..\\CorpusRDS\\corpus_PMDB_", ano, "_", ano, "_limpo.rds"))
+PSOL <- readRDS(paste0("..\\CorpusRDS\\corpus_PSOL_", ano, "_", ano, "_limpo.rds"))
+PCDOB <- readRDS(paste0("..\\CorpusRDS\\corpus_PCDOB_", ano, "_", ano, "_limpo.rds"))
+PTB <- readRDS(paste0("..\\CorpusRDS\\corpus_PTB_", ano, "_", ano, "_limpo.rds"))
 
 
 ##################################################

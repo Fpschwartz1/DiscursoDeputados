@@ -16,8 +16,8 @@ Os discursos são respectivos aos pequeno e grande expedientes das sessões consid
 
 # carrega bibliotecas e pacotes
 source("22_TesteHipotese.R")
-source("..\\03_2017JulAgo\\10_CorporaPorCriterios.R")
-source("..\\03_2017JulAgo\\11_LimpaCorporaParaAnalise.R")
+source("..\\03_2017JulAgo\\10_CorpusPorCriterios.R")
+source("..\\03_2017JulAgo\\11_LimpaCorpusParaAnalise.R")
 library(stringr)
 library(dplyr)
 
@@ -26,7 +26,7 @@ library(dplyr)
 ### Período da análise
 
 ```{r}
-ini <- 2003
+ini <- 2001
 fim <- 2015
 
 anos <- as.character(ini:fim)
@@ -38,7 +38,7 @@ Dado o período de análise, verificam-se os partidos existentes na tabela coalizõ
 
 ```{r}
 # lê base de discursos
-discursos <- readRDS("..\\DadosRDS\\discurso_2000_2017.rds")
+discursos <- readRDS("..\\CorporaRDS\\discurso_2000_2017.rds")
 discursos <- discursos[  str_sub(discursos$dataSessao,7,10) >= ini 
                        & str_sub(discursos$dataSessao,7,10) <= fim
                        & !(discursos$partidoOrador %in% c("", "40211", "SEM PARTIDO", "REGISTRO PPS")), ]
@@ -72,15 +72,15 @@ for(ano in anos){
   lpartidos[[ano]] <- partidos
 }
 
-# caso não exista corpora, deve-se gerar: geracorpora <- TRUE
-geracorpora <- FALSE
-if(geracorpora){
+# caso não exista corpus, deve-se gerar: geracorpus <- TRUE
+geracorpus <- FALSE
+if(geracorpus){
   for(ano in ini:fim){ 
     lpartidos_aux <- lpartidos[[as.character(ano)]]
     for(partido in lpartidos_aux){
       
-      if(corpora_por_criterios(discursos, ano, ano, partido, c("GE", "PE"))){
-        limpa_corpora(ano, ano, partido)  
+      if(corpus_por_criterios(discursos, ano, ano, partido, c("GE", "PE"))){
+        limpa_corpus(ano, ano, partido)
       } 
       
     }
@@ -122,11 +122,12 @@ for(ano in anos) {
 
   for(partido in lpartidos[[ano]]){
 
-    arq <- paste0("..\\CorporaRDS\\corpora_", partido, "_", ano, "_", ano, "_limpo.rds")
+    arq <- paste0("..\\CorpusRDS\\corpus_", partido, "_", ano, "_", ano, "_limpo.rds")
 
     if(file.exists(arq)){
       ldfpa[[partido]] <- readRDS(arq) 
-      if(nrow(ldfpa[[partido]]$bigramas) == 0){
+      # rejeita partidos cujos discursos não produziram pelo menos 30 bigramas
+      if(nrow(ldfpa[[partido]]$bigramas) < 30){
         lpartidos[[ano]] <- lpartidos[[ano]][ !(lpartidos[[ano]] %in% partido) ]
       }
     } else{
@@ -146,7 +147,7 @@ for(ano in anos) {
   
   for(i in 1:(nrow(mdis)-1)){
     for(j in (i+1):nrow(mdis)){
-      # print(paste(ano, i, j))
+      print(paste(ano, i, j))
       mdis[i, j] <- corpus_similaridade(ldfpa[[lpartidos[[ano]][i]]]$bigramas,
                                         ldfpa[[lpartidos[[ano]][j]]]$bigramas,
                                         nrow(ldfpa[[lpartidos[[ano]][i]]]$bigramas),
@@ -224,10 +225,23 @@ for(i in 1:length(ltdis)){
   vico[i]  <- mean(ltdis[[i]][,'ico'], na.rm = TRUE)
 }
 
-plot(ini:fim, vico, type = "o", col = "red", ylab = "índice de similaridade", xlab = "ano")
+
+plot.new()
+plot.window(xlim=c(ini,fim), ylim=c(0,1))
+title("Similaridade do discurso: linha do tempo",xlab="ano",
+       ylab="Índice de similaridade")
+# rect(2001, 0, 2003, 1, col="lightblue1", border = FALSE)
+# rect(2003, 0, 2007, 1, col="palevioletred1", border = FALSE)
+# rect(2007, 0, 2011, 1, col="mistyrose1", border = FALSE)
+# rect(2011, 0, 2015, 1, col="salmon", border = FALSE)
 lines(ini:fim, vicoa, type = "o", col = "blue")
-lines(ini:fim, viopo, type = "o", col = "green")
+lines(ini:fim, vico, type = "o", col = "seagreen")
+lines(ini:fim, viopo, type = "o", col = "red")
+axis(1,ini:fim,anos)
+axis(2,seq(0,1,0.1),as.character(seq(0,1,0.1)))
 grid()
+box()
+
 ```
 
 

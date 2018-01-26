@@ -4,7 +4,7 @@
 
 ### 15_Topicos.R
 
-Implementa a função **topicos_discurso**, que lê o arquivo "corpora_partido_ini_fim_limpo.rds", a partir dos parãmetros ini, fim e partido informados, remove termos esparsos e aplica o modelo Latent Dirichlet Allocation (LDA) para a identificação de tópicos. São utilizados os métodos de ajuste de VEM (Variational Expectation Maximization) e de Gibbs. Por fim, grava os resultados no arquivo "topicos_partido_ini_fim.rds", na pasta "..\Topicos".
+Implementa a função **topicos_discurso**, que lê o arquivo "corpus_partido_ini_fim_limpo.rds", a partir dos parâmetros ini, fim e partido informados, remove termos esparsos e aplica o modelo Latent Dirichlet Allocation (LDA) para a identificação de tópicos. São utilizados os métodos de ajuste de VEM (Variational Expectation Maximization) e de Gibbs. Por fim, grava os resultados no arquivo "topicos_partido_ini_fim.rds", na pasta "..\Topicos".
 
 No processamento de linguagem natural, a Alocação Latente de Dirichlet é um modelo estatístico generativo que permite que os conjuntos de observações sejam explicados por grupos identificam partes de dados são semelhantes. 
 Por exemplo, se as observações são palavras coletadas em documentos, ele postula que cada documento é uma mistura de um pequeno número de tópicos e que a criação de cada palavra é atribuível a um dos tópicos do documento.

@@ -56,7 +56,7 @@ tbl_contingencia <- function(bigramas, tfq, ntokens, n = 20){
     m <- matrix(0,2,2)
     words <- str_split(names(bigramas[i]), ' ')[[1]]
 
-    # corpora_PT_2015_2015_limpo.rds
+    # corpus_PT_2015_2015_limpo.rds
     #         mulher                          ~mulher
     # negra   bigrama = 314                   tfq[negra]-bigrama = 577-314
     # ~negra  tfq[mulher]-bigrama = 1364-314  ntokens - c(1,2) - c(2,1)

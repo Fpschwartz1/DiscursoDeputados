@@ -20,9 +20,9 @@ topicos_discurso <- function(ini, fim, partido){
 
   print(paste0(partido, " - ", ini, " a ", fim))
   
-  # lê arquivo de corpora 
-  pasta_corpora <- "..\\CorporaRDS\\"
-  arq_corpora <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
+  # lê arquivo do corpus sob análise
+  pasta_corpora <- "..\\CorpusRDS\\"
+  arq_corpora <- paste0("corpus_", partido, "_", ini, "_", fim, "_limpo.rds")
   lista <- readRDS(paste0(pasta_corpora, arq_corpora))
   docs <- lista[[1]]
   

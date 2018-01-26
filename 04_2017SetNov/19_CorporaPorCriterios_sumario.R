@@ -7,8 +7,8 @@ source("..\\02_2017MaiJun\\05_EncodeDecode.R")
 corpora_sumario <- function(ini, fim, partido){
   print(sprintf("Partido: %s (%d - %d)", partido, ini, fim))
   
-  # lê arquivo com todos os discursos
-  pastaorig <- "..\\DadosRDS\\"
+  # lê arquivo com todos os discursos do corpora
+  pastaorig <- "..\\CorporaRDS\\"
   discursos <- readRDS(paste0(pastaorig, "discurso_2000_2017.rds"))
   names(discursos)[1] <- "seq"
   
@@ -24,8 +24,8 @@ corpora_sumario <- function(ini, fim, partido){
   print(tipo_sessao)
   
   ### Lê arquivo de discursos e aplica critérios iniciais de filtragem
-  pastadest <- "..\\CorporaRDS\\"
-  arquivo <- paste0(pastadest, "corpora_", partido, "_", ini, "_", fim, ".rds")
+  pastadest <- "..\\CorpusRDS\\"
+  arquivo <- paste0(pastadest, "corpus_", partido, "_", ini, "_", fim, ".rds")
   discursos <- discursos[  str_sub(discursos$dataSessao,7,10) >= ini 
                            & str_sub(discursos$dataSessao,7,10) <= fim 
                            & discursos$partidoOrador == partido

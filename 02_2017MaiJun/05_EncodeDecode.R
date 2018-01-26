@@ -100,6 +100,7 @@ remove_plural <- function(txt){
   # -ens -ins -ons -uns
   txt <- gsub('\\b(.*)([éeiou])ns\\>\\b', '\\1\\2m', txt)
   
+  ### supressão do -s ao final das palavras
   # -qu
   txt <- gsub('\\b(.*)quas\\>\\b', '\\1qua', txt)
   txt <- gsub('\\b(.*)ques\\>\\b', '\\1que', txt)

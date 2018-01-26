@@ -40,9 +40,9 @@ if(!require(gridExtra)) { install.packages('gridExtra') }
 # https://rpubs.com/mlmv/swiftkey
 
 
-# lê arquivo com todos os discursos
-pasta <- "..\\CorporaRDS\\"
-arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
+# lê arquivo com todos os discursos sob análise
+pasta <- "..\\CorpusRDS\\"
+arquivo <- paste0("corpus_", partido, "_", ini, "_", fim, "_limpo.rds")
 lista <- readRDS(paste0(pasta, arquivo))
 docs <- lista$docs
 tfq  <- lista$tfq

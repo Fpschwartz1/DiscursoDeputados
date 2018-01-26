@@ -18,7 +18,7 @@ Contém a função **retira_fig** que recebe como parâmetros o **discurso** e o
 
 ### 08_CriaCorporaDiscursoInteiroTeor.R
 
-Lê os arquivos "discurso_AAAA_dit.csv", decodifica cada discurso para **rtf**, utiliza a função **retira_fig** e grava no arquivo "Discursos_AAAA.txt" um texto único (*corpus*) com todos os discursos do respecitvo ano.
+Lê os arquivos "discurso_AAAA_dit.csv", decodifica cada discurso para **rtf**, utiliza a função **retira_fig** e grava no arquivo "Discursos_AAAA.txt" um texto único (*corpus*) com todos os discursos do respectivo ano.
 
 ### Dados
 

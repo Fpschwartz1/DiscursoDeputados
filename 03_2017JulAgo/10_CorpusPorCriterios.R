@@ -5,11 +5,11 @@ if(!require(stringi)) { install.packages('stringi') }
 source("..\\02_2017MaiJun\\05_EncodeDecode.R")
 source("..\\02_2017MaiJun\\07_CorporaRetiraQuadrosFiguras.R")
 
-corpora_por_criterios <- function(discursos, ini, fim, partido, codigoFase = NULL){
+corpus_por_criterios <- function(discursos, ini, fim, partido, codigoFase = NULL){
   print(sprintf("Partido: %s (%d - %d)", partido, ini, fim))
   
   # pasta com os arquivos "discurso_AAAA_dit.rds"
-  pastaorig <- "..\\DadosRDS\\"
+  pastaorig <- "..\\CorporaRDS\\"
   
   # altera nome da primeira coluna do data.frame discursos
   names(discursos)[1] <- "seq"
@@ -25,14 +25,20 @@ corpora_por_criterios <- function(discursos, ini, fim, partido, codigoFase = NUL
   tipo_sessao <- table(discursos$tipoSessao)
   # filtra sessões relevantes
   tipo_sessao <- as.character(levels(as.factor(discursos$tipoSessao)))
-  tipo_sessao <- tipo_sessao[c(3:8, 12, 14:15, 18:19)]
+  tipo_sessao <- tipo_sessao[tipo_sessao %in%
+                              c("Comissão Geral", "Comissão Representativa",
+                                "Deliberativa Extraordinária - CD","Deliberativa Ordinária - CD",
+                                "Extraordinária - CD", "Extraordinária - CN",
+                                "Não Deliberativa de Debates - CD", "Ordinária - CD",
+                                "Ordinária - CN", "Preparatória", "Reforma Previdenciária")
+                            ]
   discursos <- discursos[discursos$tipoSessao %in% tipo_sessao, ]
   print('Tipos de sessão')
   print(tipo_sessao)
   
   ### Lê arquivo de discursos e aplica critérios iniciais de filtragem
-  pastadest <- "..\\CorporaRDS\\"
-  arquivo <- paste0(pastadest, "corpora_", partido, "_", ini, "_", fim, ".rds")
+  pastadest <- "..\\CorpusRDS\\"
+  arquivo <- paste0(pastadest, "corpus_", partido, "_", ini, "_", fim, ".rds")
   discursos <- discursos[  str_sub(discursos$dataSessao,7,10) >= ini 
                            & str_sub(discursos$dataSessao,7,10) <= fim 
                            & discursos$partidoOrador == partido
@@ -79,10 +85,9 @@ corpora_por_criterios <- function(discursos, ini, fim, partido, codigoFase = NUL
       discurso <- retira_fig(discurso, ano)
       
       # retira a apresentação do discurso: "SR, PRESIDENTE ..."
-      discurso <- str_sub(discurso,
-                          str_locate(discurso, "\\)")[1]+1,
-                          str_length(discurso)
-      )
+      ret_apre <- str_sub(discurso, str_locate(discurso, "\\)")[1]+1, str_length(discurso))
+      if(!is.na(ret_apre))
+        discurso <- ret_apre
       
       # adiciona ao vetor de discursos
       vdisc[i] <- discurso

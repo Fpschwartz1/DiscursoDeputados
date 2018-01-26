@@ -18,8 +18,8 @@ freq_discurso <- function(tema, ini, fim, partido, codigoFase = c('PE', 'GE')){
   
   print(sprintf("Partido: %s (%s - %s)", partido, ini, fim))
   
-  # lê arquivo com todos os discursos
-  pastaorig <- "..\\DadosRDS\\"
+  # lê arquivo com todos os discursos do corpora
+  pastaorig <- "..\\CorporaRDS\\"
   discursos <- readRDS(paste0(pastaorig, "discurso_2000_2017.rds"))
   discursos$dataSessao <- as.Date(discursos$dataSessao, "%d/%m/%Y")
   names(discursos)[1] <- "seq"

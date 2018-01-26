@@ -15,7 +15,7 @@ for(partido in c("PT","PSDB")){
     ini <- ano
     fim <- ano
 
-    corpus <- readRDS(paste0("..\\CorporaRDS\\corpora_", partido, "_", ini, "_", fim, "_limpo.rds"))
+    corpus <- readRDS(paste0("..\\CorpusRDS\\corpus_", partido, "_", ini, "_", fim, "_limpo.rds"))
     topicos <- readRDS(paste0("..\\Topicos\\topicos_", partido, "_", ini, "_", fim, ".rds"))
 
     # unigramas mais frequentes

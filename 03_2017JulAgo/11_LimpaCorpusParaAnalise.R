@@ -84,19 +84,21 @@ remove_ngramas <- function(texto, ngramas){
 }
 
 
-# profvis({ # identifica gragalos de processamento
 
-limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
+
+limpa_corpus <- function(ini, fim, partido, fl_partes = FALSE){
   # ini: ano inicial
   # fim: ano final
   # partido: partido
   # fl_partes: TRUE - quando a lista de nomes está quebrada em suas partes
+
+# profvis({ # identifica gragalos de processamento
   
   print(paste0(partido, " - ", ini, " a ", fim))
   
-  # lê arquivo com todos os discursos
-  pasta <- "..\\CorporaRDS\\"
-  arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, ".rds")
+  # lê arquivo com todos os discursos do corpus em análise
+  pasta <- "..\\CorpusRDS\\"
+  arquivo <- paste0("corpus_", partido, "_", ini, "_", fim, ".rds")
   if(file.exists(paste0(pasta, arquivo))){
     vdisc <- readRDS(paste0(pasta, arquivo))  
   } else {
@@ -243,9 +245,9 @@ limpa_corpora <- function(ini, fim, partido, fl_partes = FALSE){
   # tfq, ntokens e bigramas: usados para determinação de collocations e métrica de similaridade de corpus
   # freq_tdm: passou pelos filtros TfIdf e Sparse e pode ser usado para métrica de similaridade de corpus
 
-# })
+# }) # identifica gragalos de processamento
 
-  arquivo <- paste0("corpora_", partido, "_", ini, "_", fim, "_limpo.rds")
+  arquivo <- paste0("corpus_", partido, "_", ini, "_", fim, "_limpo.rds")
   saveRDS(dados, paste0(pasta, arquivo))
   
   return(TRUE)

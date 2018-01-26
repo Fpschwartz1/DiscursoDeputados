@@ -25,7 +25,7 @@ for(ano in ini:fim){
 }
 
 # grava arquivo consolidado
-system.time(saveRDS(discursos, paste0("..\\DadosRDS\\discurso_",ini,"_",fim,".rds")))
+system.time(saveRDS(discursos, paste0("..\\CorporaRDS\\discurso_",ini,"_",fim,".rds")))
 
 # converte arquivos "discurso_AAAA_dit.csv" para RDS
 for(ano in ini:fim){
@@ -34,6 +34,6 @@ for(ano in ini:fim){
   
   arquivo <- paste0("..\\..\\Dados\\discurso_", ano, "_dit.csv")
   discurso <- read.csv2(arquivo, sep=";", colClasses = "character")
-  saveRDS(discurso, paste0("..\\DadosRDS\\discurso_",ano, "_dit.rds"))  
+  saveRDS(discurso, paste0("..\\CorporaRDS\\discurso_",ano, "_dit.rds"))  
   
 }
