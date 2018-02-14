@@ -1,9 +1,10 @@
 # pacotes
 if(!require(stringr)) { install.packages('stringr') }
 if(!require(stringi)) { install.packages('stringi') }
+# if(!require(ggplot2)) { install.packages('ggplot2') }
 
 source("..\\02_2017MaiJun\\05_EncodeDecode.R")
-source("NormalCompara.R")
+source("21_NormalCompara.R")
 # source("..\\02_2017MaiJun\\07_CorporaRetiraQuadrosFiguras.R")
 
 # conta ocorrências do tema em cada discurso no período ini-fim
@@ -104,40 +105,85 @@ histograma <- function(freq_disc, intervalo_classe = "sem"){
   histog
 }
 
-# previdência
-freqPT <- freq_discurso('reforma da previdência', '01/01/2003', '31/12/2005', 'PT')
-freqPSDB <- freq_discurso('previdência', '01/01/2003', '31/12/2005', 'PSDB')  
+tema = 'educação'
+ini='01/01/2016'
+fim='31/12/2016'
 
-plot(freqPT[[1]]$dataSessao, freqPT[[1]]$freq, type='l')
-lines(freqPSDB[[1]]$dataSessao, freqPSDB[[1]]$freq, col='red')
+comparatema_distfreq <- function(tema, ini, fim, partidos=c('PT', 'PSDB'), cores=c('red', 'skyblue')){
 
-hPT <- histograma(freqPT)
-hPSDB <- histograma(freqPSDB)
+  # recupera discursos do partido no período 
+  # e calcula a frequência do tema em cada discurso
+  freqP1 <- freq_discurso(tema, ini, fim, partidos[1])
+  freqP2 <- freq_discurso(tema, ini, fim, partidos[2])
 
-dnormalComp(mean(hPT), sd(hPT)/sqrt(length(hPT)),
-            mean(hPSDB), sd(hPSDB)/sqrt(length(hPSDB)))
+  # plota a frequência dos discursos no tempo
+  plot(freqP1[[1]]$dataSessao, freqP1[[1]]$freq, type='l', col=cores[1],
+       xlab='tempo',ylab='frequência',main=tema)
+  lines(freqP2[[1]]$dataSessao, freqP2[[1]]$freq, col=cores[2])
+  grid()
+  # http://www.sthda.com/english/wiki/add-legends-to-plots-in-r-software-the-easiest-way
+  legend('topright', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
+  
+  par(mfrow=c(2,1), cex = 0.7)
+  
+  # determina a frequência do tema para cada dia do período
+  hP1 <- histograma(freqP1, 'dia')
+  hP2 <- histograma(freqP2, 'dia')
+  
+  # histograma
+  hist(hP2,col=cores[2],border=F, main = paste("(a) Tema", tema, "- 2016 - histograma"), 
+       xlab='Frequência do tema por dia no período', ylab='Frequência')
+  hist(hP1,add=T,col=scales::alpha(cores[1],.7),border=F)
+  legend('topright', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
+  box()
+  # densidade de probabilidade
+  d1 <- density(hP1)
+  d2 <- density(hP2)
+  plot(d2, main = paste("(b) Tema", tema, "- 2016 - densidade"), 
+       xlab='Densidade do tema por dia no período', ylab='Densidade')
+  polygon(d2, col=cores[2], border="blue")
+  lines(d1)
+  polygon(d1, col=scales::alpha(cores[1],.7), border="blue")
+  legend('topright', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
+  
+  # retira dias com frequência igual a zero
+  hP1 <- hP1[hP1 > 0]
+  hP2 <- hP2[hP2 > 0]
+  
+  # histograma
+  hist(hP2,col=cores[2],border=F, main = paste("(a) Tema", tema, "- 2016 - histograma"), 
+       xlab='Frequência do tema por dia no período', ylab='Frequência')
+  hist(hP1,add=T,col=scales::alpha(cores[1],.7),border=F)
+  legend('topright', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
+  box()
+  # densidade de probabilidade
+  d1 <- density(hP1)
+  d2 <- density(hP2)
+  plot(d2, main = paste("(b) Tema", tema, "- 2016 - densidade"), 
+       xlab='Densidade do tema por dia no período', ylab='Densidade')
+  polygon(d2, col=cores[2], border="blue")
+  lines(d1)
+  polygon(d1, col=scales::alpha(cores[1],.7), border="blue")
+  legend('topright', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
+  
+  par(mfrow=c(1,1), cex = 1)
+}
 
-# saúde
-freqPT <- freq_discurso('saúde', '01/01/2003', '31/12/2015', 'PT')
-freqPSDB <- freq_discurso('saúde', '01/01/2003', '31/12/2015', 'PSDB')  
 
-hPT <- histograma(freqPT, 'ano')
-hPSDB <- histograma(freqPSDB, 'ano')
-df <- data.frame(k = 1:length(hPT), hPSDB,hPT)
-df <- df[df$hPT > 0,]
+# temas dos quadros 4.1 e 4.2
+# "corrupção", "educação/ensino médio", "reforma da previdência", "direito da mulher"
 
-chisq.test(m)
-
-hist(hPT)
+comparatema_distfreq('corrupção', '01/01/2016', '31/12/2016')
+comparatema_distfreq('educação', '01/01/2016', '31/12/2016')
+comparatema_distfreq('previdência', '01/01/2016', '31/12/2016')
+comparatema_distfreq('mulher', '01/01/2016', '31/12/2016')
 
 
 
-dnormalComp(mean(hPT), sd(hPT)/sqrt(length(hPT)),
-            mean(hPSDB), sd(hPSDB)/sqrt(length(hPSDB)))
 
-freqPMDB <- freq_discurso('saúde', '01/01/2003', '31/12/2015', 'PMDB')
-hPMDB <- histograma(freqPMDB, 'mes')
 
+
+##########################################
 dnormalComp(mean(hPSDB), sd(hPT)/sqrt(length(hPSDB)),
             mean(hPMDB), sd(hPMDB)/sqrt(length(hPMDB)))
 

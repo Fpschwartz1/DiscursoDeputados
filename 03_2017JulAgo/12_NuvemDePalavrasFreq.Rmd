@@ -2,9 +2,9 @@
 title: "Palavras frequentes"
 output: html_document
 params:
-  ini: 2015
-  fim: 2015
-  partido: "PT"
+  ini: 2016
+  fim: 2016
+  partido: "PSDB"
 ---
 
 ```{r setup, include=FALSE}
@@ -71,7 +71,7 @@ purple_orange <- purple_orange[-(1:2)]
 # create a wordcloud with purple_orange palette
 ```
 
-#### *tfq - contagem bruta*
+#### *tfq - frequência absoluta*
 
 ```{r, echo = FALSE}
 tfq <- tfq[!is.na(tfq$FREQ), ]
@@ -98,7 +98,7 @@ p1 <- tfq[1:20,] %>%
    xlab(NULL) +
    coord_flip() +
    theme(panel.background = element_rect(fill='white', colour='gray')) +
-   ylab("Freq") + xlab("Palavra") + ggtitle("Contagem bruta")
+   ylab("Freq") + xlab("Palavra") + ggtitle("Frequência Absoluta")
 
 p2 <- freq_tdm[1:20,] %>%
    ggplot(aes(x = reorder(WORD, FREQ), y = FREQ)) +
@@ -117,7 +117,7 @@ grid.arrange(p1, p2)
 # dendogramas
 tfq <- tfq[1:20,]
 hc <- hclust( dist(tfq$FREQ) )
-plot(hc, labels = tfq$WORD, main = "Contagem bruta", xlab = "Palavras")
+plot(hc, labels = tfq$WORD, main = "Frequência absoluta", xlab = "Palavras")
 
 freq_tdm <- freq_tdm[1:20,]
 hc <- hclust( dist(freq_tdm$FREQ) )
@@ -142,7 +142,7 @@ p3 <- bigramas %>%
    xlab(NULL) +
    coord_flip() +
    theme(panel.background = element_rect(fill='white', colour='gray')) +
-   ylab("Freq") + xlab("Bigrama") + ggtitle("Contagem bruta")
+   ylab("Freq") + xlab("Bigrama") + ggtitle("Frequência absoluta")
 p3
 ```
 
@@ -151,7 +151,7 @@ p3
 ```{r, echo = FALSE}
 # Dendogramas de bigramas
 hc <- hclust( dist(bigramas$n) )
-plot(hc, labels = bigramas$bigram, main = "Contagem bruta", xlab = "Bigramas")
+plot(hc, labels = bigramas$bigram, main = "Frequência absoluta", xlab = "Bigramas")
 
 ```
 

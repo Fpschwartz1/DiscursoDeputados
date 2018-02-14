@@ -147,7 +147,7 @@ for(ano in anos) {
   
   for(i in 1:(nrow(mdis)-1)){
     for(j in (i+1):nrow(mdis)){
-      print(paste(ano, i, j))
+      # print(paste(ano, i, j))
       mdis[i, j] <- corpus_similaridade(ldfpa[[lpartidos[[ano]][i]]]$bigramas,
                                         ldfpa[[lpartidos[[ano]][j]]]$bigramas,
                                         nrow(ldfpa[[lpartidos[[ano]][i]]]$bigramas),
