@@ -126,3 +126,7 @@ testa_collocations <- function(bigramas, tfq, ntokens, n = 20, alpha = 0.05){
 }
 
 
+# exemplo do usado no relatório
+tb_cont <- matrix(c(25, 45, 15, 25, 10, 30), ncol=2, byrow = TRUE)
+qui_quadrado_cont((tb_cont))
+
