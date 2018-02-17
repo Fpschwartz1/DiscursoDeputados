@@ -75,7 +75,7 @@ tbl_contingencia <- function(bigramas, tfq, ntokens, n = 20){
 #     isto é, não existe diferença entre as frequências (contagens) dos grupos. 
 # H1: As frequências observadas são diferentes das frequências esperadas, 
 #     portanto existe diferença entre as frequências dos grupos.
-corpus_similaridade <- function(tfq1, tfq2, ntokens1, ntokens2, n = 500){
+corpus_similaridade <- function(tfq1, tfq2, ntokens1, ntokens2, n = 500, ver_temas=FALSE){
   # garante que os nomes das colunas sejam WORD e FREQ
   # mesmo quando são enviados bigramas
   names(tfq1) <- c("WORD", "FREQ")
@@ -92,7 +92,8 @@ corpus_similaridade <- function(tfq1, tfq2, ntokens1, ntokens2, n = 500){
   
   # ow1: freq. observada da palavra no corpus 1
   # ow2: freq. observada da palavra no corpus 2
-  df <- data.frame(ow1 = tfq1$FREQ, ow2 = tfq2$FREQ)
+  df <- data.frame(temas=tfq1$WORD, ow1 = tfq1$FREQ, ow2 = tfq2$FREQ)
+  if(ver_temas) print(df[1:10,])
   # ew1: valor esperado da palavra no corpus 1
   df$ew1 <- (ntokens1 * (df$ow1 + df$ow2)) / (ntokens1 + ntokens2)
   # ew2: valor esperado da palavra no corpus 2
@@ -126,7 +127,4 @@ testa_collocations <- function(bigramas, tfq, ntokens, n = 20, alpha = 0.05){
 }
 
 
-# exemplo do usado no relatório
-tb_cont <- matrix(c(25, 45, 15, 25, 10, 30), ncol=2, byrow = TRUE)
-qui_quadrado_cont((tb_cont))
 
