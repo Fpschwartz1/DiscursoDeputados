@@ -14,16 +14,19 @@ Dados protocolares do Processo Legislativo são tratados de forma estruturada e 
 
 ## Objetivo
 
-O objetivo geral deste trabalho de pesquisa concentra-se no desenvolvimento de algoritmos computacionais, baseados em Processamento de Linguagem Natural e aprendizagem de máquina, com a finalidade de organizar, classificar, recuperar e divulgar o conhecimento implícito da atividade política contida no discurso parlamentar.
+O objetivo geral deste trabalho de pesquisa tem abordagem prática e se concentra no desenvolvimento e aplicação de algoritmos computacionais, baseados em Processamento de Linguagem Natural, estatística e aprendizagem de máquina, com a finalidade organizar, classificar, recuperar e divulgar o conhecimento implícito da atividade política contida no discurso parlamentar.
 
-Como objetivos específicos, podem ser destacados:
+Como objetivos específicos, podem ser destacados os de suporte:
 
-1.	a estruturação de base textual (*corpus*) dos discursos parlamentares compreendendo as legislaturas de número 52, 53, 54 e 55;
-2.	a construção dos sintagramas , ou n-gramas, com grupos de duas a cinco palavras;
-3.	o desenvolvimento de classificadores por meio de técnicas de aprendizagem de máquina para a identificação de características do discurso, como: padrões e reconhecimento da fala, estilo comunicativo do orador, vocabulário temático (léxico), etc; 
-4.	a extração e interpretação de informações dos aspectos estruturais do discurso parlamentar para a produção de conhecimento; 
-5.	a resolução de ambiguidades do discurso; e
-6.	a simplificação de texto e estudo da aplicação do PLN ao processo de retextualização .
+1.	a identificação e aplicação das tecnologias disponíveis para o Processamento de Linguagem Natural, com enfoque nos pacotes de funcionalidades disponíveis para as linguagens R e Python;
+2.	a estruturação de base textual (*corpus*) dos discursos parlamentares compreendendo as legislaturas de número 51, 52, 53, 54 e 55;
+3.	a disponibilização dos dados, scripts de programação e resultados em repositório público com a finalidade de incentivar novos estudos sobre o tema e de prover meios para a reprodutibilidade da pesquisa;
+
+e os de caráter analítico:
+
+4.	a construção dos sintagramas, ou n-gramas, com grupos de duas palavras e validação de *collocations*; 
+5.	a identificação de padrões do discurso, análise de convergência ideológica e posicionamento político-partidário na linha do tempo; e
+6.	a identificação de grupos por meio da aplicação de classificadores e técnicas de aprendizagem de máquina.
 
 ## Cronograma
 
@@ -31,13 +34,13 @@ Mês/Ano |	Atividade
 --------|----------------------------------------------------------------------
 Mar/2017| Compilação das bases textuais das legislaturas 52 e 53
 Abr/2017| Compilação das bases textuais das legislaturas 54 e 55
-Mai/2017| Estruturação do corpus e testes de desempenho
+Mai/2017| Estruturação do *corpora* e testes de desempenho
 Jun/2017| Organização dos n-gramas e desenvolvimento de classificadores
-Jul/2017| Testes de pacotes lexicais e estruturação de vocabulário temático
-Ago/2017| Desenvolvimento de algoritmos para análise morfológica
-Set/2017| Desenvolvimento de algoritmos para análise sintática
-Out/2017| Desenvolvimento de algoritmos para análise semântica
-Nov/2017| Desenvolvimento de algoritmos para análise pragmática
-Dez/2017| Construção de interface para utilização dos algoritmos
-Jan/2018| Avaliação dos algoritmos desenvolvidos em situações práticas reais
+Jul/2017| Criação de dicionários de *stopwords* em português e pré-processamento de *corpus*
+Ago/2017| Análise exploratória dos dados por meio de nuvens de palavras e gráficos de frequência
+Set/2017| Criação de dicionários de *stopwords* do discurso parlamentar e do Processo Legislativo
+Out/2017| Análise de cluster hierárquica e modelo de tópicos
+Nov/2017| Estudo da distribuição de probabilidades dos temas, teste qui-quadrado e tabelas de contingência
+Dez/2017| Análise de *collocations*, similaridade do discurso e aprendizagem de máquina
+Jan/2018| Elaboração do relatório de pesquisa
 Fev/2018| Elaboração do relatório de pesquisa

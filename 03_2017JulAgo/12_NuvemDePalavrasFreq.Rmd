@@ -2,9 +2,9 @@
 title: "Palavras frequentes"
 output: html_document
 params:
-  ini: 2016
-  fim: 2016
-  partido: "PSDB"
+  ini: 2006
+  fim: 2006
+  partido: "DEM"
 ---
 
 ```{r setup, include=FALSE}

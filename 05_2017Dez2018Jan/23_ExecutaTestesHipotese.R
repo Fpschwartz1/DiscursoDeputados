@@ -49,6 +49,7 @@ bigramasPTB <- testa_collocations(PTB$bigramas, PTB$tfq, PTB$ntokens, 20)
 
 ##################################################
 # Medida de similaridade e homogeneidade de corpus
+# Tabela 5.7 do relatório de pesquisa
 ##################################################
 # Executa teste qui-quadrado para avaliação de similaridade
 # Aqui a medida de similaridade é efetuada em corpus homogêneos (discurso parlamentar)
@@ -68,7 +69,7 @@ mp <- matrix(
     byrow = TRUE
 )
 
-# Tabela 
+# Tabela 5.7
 n <- 500
 df <- NULL
 for(i in 1:nrow(mp)){
@@ -157,7 +158,7 @@ for(ano in anos) {
   names(ldfpa) <- partidos
   
   for(partido in partidos){
-    ldfpa[[partido]] <- readRDS(paste0("..\\CorporaRDS\\corpora_", partido, "_", ano, "_", ano, "_limpo.rds"))
+    ldfpa[[partido]] <- readRDS(paste0("..\\CorpusRDS\\corpus_", partido, "_", ano, "_", ano, "_limpo.rds"))
   }
   
   # quantidade de partidos
@@ -230,21 +231,4 @@ for(ano in anos) {
   ltdis[[ano]] <- mdis
 
 }
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
 

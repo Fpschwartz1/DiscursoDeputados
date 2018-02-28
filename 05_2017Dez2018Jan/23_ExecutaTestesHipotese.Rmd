@@ -100,6 +100,16 @@ coalizoes <- coalizoes %>%
   summarise(flCoalizao = mean(flagCoalizao))
 coalizoes <- mutate(coalizoes, lflCoalizao = flCoalizao > 0)
 
+# salva coalizoes consolidadas para uso em aprendizagem supervisionada
+write.csv(coalizoes, "coalizoes_consolidado.csv", row.names = FALSE)
+
+# conta a quantidade de partidos que formam a coalizão no dado ano
+ncoalizoes <- coalizoes %>%
+  group_by(Ano) %>%
+  summarise(qtd_partidos = sum(lflCoalizao))
+
+ncoalizoes <- ncoalizoes$qtd_partidos
+names(ncoalizoes) <- anos
 ```
 
 ### Constrói tabelas de dissimilaridade
@@ -158,7 +168,7 @@ for(ano in anos) {
     }
   }
 
-  # maiúsculo significa coalizão
+  # maiúsculo significa coalizão governista
   vcoalizoes <- coalizoes$lflCoalizao[coalizoes$Ano == ano & (coalizoes$Partido %in% lpartidos[[ano]])]
   names(vcoalizoes) <- coalizoes$Partido[coalizoes$Ano == ano & (coalizoes$Partido %in% lpartidos[[ano]])]
   rownames(mdis)[!vcoalizoes] <- colnames(mdis)[!vcoalizoes] <- str_to_lower(lpartidos[[ano]][!vcoalizoes])
@@ -227,22 +237,124 @@ for(i in 1:length(ltdis)){
 
 
 plot.new()
-plot.window(xlim=c(ini,fim), ylim=c(0,1))
-title("Similaridade do discurso: linha do tempo",xlab="ano",
-       ylab="Índice de similaridade")
-# rect(2001, 0, 2003, 1, col="lightblue1", border = FALSE)
-# rect(2003, 0, 2007, 1, col="palevioletred1", border = FALSE)
-# rect(2007, 0, 2011, 1, col="mistyrose1", border = FALSE)
-# rect(2011, 0, 2015, 1, col="salmon", border = FALSE)
+plot.window(xlim=c(ini,fim+2), ylim=c(0,1.2))
+title("Similaridade do discurso: linha do tempo",xlab="Dezembro do ano ...",
+      ylab="Índice de Identidade Ideológica")
+rect(2000, 0, 2002, 1.2, col="lightblue1", border = FALSE)
+text(2001.2, 1.15, pos = 1, "FHC", col="blue")
+rect(2002, 0, 2006, 1.2, col="lavenderblush", border = FALSE)
+text(2004, 1.15, pos = 1, "LULA I", col="red4")
+rect(2006, 0, 2010, 1.2, col="seashell", border = FALSE)
+text(2008, 1.15, pos = 1, "LULA II", col="red4")
+rect(2010, 0, 2014, 1.2, col="papayawhip", border = FALSE)
+text(2012, 1.15, pos = 1, "DILMA I", col="red3")
+rect(2014, 0, 2016, 1.2, col="lightyellow", border = FALSE)
+text(2015, 1.15, pos = 1, "DILMA II", col="red3")
+# grid x
+lines(c(2002,2002,2006,2006,2010,2010,2014,2014),
+      c(-0.1,1.5,1.5,-0.1,-0.1,1.5,1.5,-0.1),
+      type="l", lty="dotted", col="gray77")
+# grid x
+lines(c(-2000,2018,2018,2000,2000,2018,2018,2000,2000,2018,2018,2000),
+      c(0,0,0.2,0.2,0.4,0.4,0.6,0.6,0.8,0.8,1,1),
+      type="l", lty="dotted", col="gray77")
+# número de partidos na coalizão
+incx <- 0.15;incy <- 0.02
+for(i in ini:fim){
+  lines(c(i,i),c(0,0.9),type="l", lty="dotted", col="gray77")
+  rect(i-incx, 0.9-incy, i+incx, 0.9+incy, col="lightblue", border = "blue")
+  text(i, 0.9, ncoalizoes[paste0(i,'')], cex=0.7, col="blue")
+}
+#rect(2016, 0.9-incy, 2018, 0.9+incy, col="lightblue", border = "blue")
+text(2016+2.5*incx, 0.9, "qtd. de partdidos \n na base", cex=0.8, col="blue")
+
 lines(ini:fim, vicoa, type = "o", col = "blue")
 lines(ini:fim, vico, type = "o", col = "seagreen")
 lines(ini:fim, viopo, type = "o", col = "red")
-axis(1,ini:fim,anos)
+axis(1,ini:(fim+1),c(anos,"2016"))
 axis(2,seq(0,1,0.1),as.character(seq(0,1,0.1)))
-grid()
 box()
-
+legend('right', legend=c("base", "oposição", "diferentes"), col=c("blue", "red", "seagreen"),
+       lwd=3, cex = 0.8)
 ```
 
+### Comparação do Índice de Identidade Ideológica com a acurácia aferida para o modelo multinomial de Naive Bayes (alfa = 8)
 
+```{r}
+# Figura 6.2
+plot.new()
+plot.window(xlim=c(ini,fim+2), ylim=c(0,1.2))
+title("Similaridade do discurso: linha do tempo",xlab="Dezembro do ano ...",
+      ylab="Índice de similaridade")
+rect(2002, 0, 2006, 1.2, col="lavenderblush", border = FALSE)
+text(2004, 1.15, pos = 1, "LULA I", col="red4")
+rect(2006, 0, 2010, 1.2, col="seashell", border = FALSE)
+text(2008, 1.15, pos = 1, "LULA II", col="red4")
+rect(2010, 0, 2014, 1.2, col="papayawhip", border = FALSE)
+text(2012, 1.15, pos = 1, "DILMA I", col="red3")
+rect(2014, 0, 2016, 1.2, col="lightyellow", border = FALSE)
+text(2015, 1.15, pos = 1, "DILMA II", col="red3")
+# grid x
+lines(c(2002,2002,2006,2006,2010,2010,2014,2014),
+      c(-0.1,1.5,1.5,-0.1,-0.1,1.5,1.5,-0.1),
+      type="l", lty="dotted", col="gray77")
+# grid x
+lines(c(-2000,2018,2018,2000,2000,2018,2018,2000,2000,2018,2018,2000),
+      c(0,0,0.2,0.2,0.4,0.4,0.6,0.6,0.8,0.8,1,1),
+      type="l", lty="dotted", col="gray77")
+
+# plota qui-quadrado
+vicoa2 <- vicoa[3:length(vicoa)]
+lines(2003:2015, vicoa2, type = "o", col = "blue")
+
+# acurácia para o período de 2003 a 2015
+# resultados obtidos com o script Python 25_SupervisedLearning.ipynb
+
+# alpha = 0.5
+# acc <- c(0.55477424130273867, 0.56738644825018614, 0.58188064639267079, 0.53815789473684206, 0.45560690829481876, 0.49895031490552832, 0.64353176874642248, 0.54680962343096229, 0.72492922068246168, 0.6566650270536154, 0.66789940828402372, 0.66909090909090907, 0.44479830148619959) 
+
+# alpha = 1
+# acc <- c(0.62632617813964964, 0.65182427401340282, 0.65377274462399793, 0.60109649122807018, 0.53150085137436143, 0.57295311406578031, 0.70363480251860333, 0.61506276150627615, 0.78974817463865299, 0.71716674864731922, 0.73076923076923073, 0.7292121212121212, 0.49575371549893843)
+
+# alpha = 2
+# acc <- c(0.77806563039723664,0.78525688756515266, 0.80061076472833692, 0.72390350877192977, 0.69107273169545125, 0.71903428971308603, 0.82884945621064687, 0.74189330543933052, 0.88481597377440024, 0.81505164781111661, 0.82396449704142016, 0.83830303030303033, 0.613588110403397) 
+
+# alpha = 3
+# acc <- c(0.88440661238588703, 0.88830975428145942, 0.89222547397887775, 0.84868421052631582, 0.82510338117246407, 0.84289713086074181, 0.89439038351459643, 0.86924686192468614, 0.93473401877514528, 0.86833907197901294, 0.8760355029585799, 0.91466666666666663, 0.7133757961783439) 
+
+# alpha = 5
+# acc <- c(0.96656797433999508, 0.97587490692479528, 0.96538999872757347, 0.95131578947368423, 0.93784967161274624, 0.9485654303708887, 0.96279336004579275, 0.96521966527196656, 0.97928773655192969, 0.9190031152647975, 0.95192307692307687, 0.97696969696969693, 0.82085987261146498)
+
+# alpha = 6
+# acc <- c(0.97705403404885272, 0.9882352941176471,  0.98104084489120758, 0.9682017543859649, 0.96448552663585507, 0.96938418474457666, 0.97409845449341725, 0.98038702928870292, 0.98971837282074204,  0.92638137399573706, 0.96701183431952664, 0.98521212121212121, 0.8383757961783439) 
+
+# alpha = 8
+acc <- c(0.99309153713298792, 0.99419210722263585, 0.99058404377147224, 0.99407894736842106, 0.98954025784480659, 0.98582925122463261, 0.99012593016599881, 0.99215481171548114, 0.99359260914915815, 0.95868175110673881, 0.9821005917159763,  0.99515151515151512, 0.88269639065817407)
+
+# plota Naive Bayes
+lines(2003:2015, acc, type = "o")
+
+# diferenças
+vicoa_dif <- (vicoa2 - c(0,vicoa2[1:length(vicoa2)-1]))[-1] > 0
+acc_dif <- (acc - c(0,acc[1:length(acc)-1]))[-1] > 0
+vdif <- vicoa_dif == acc_dif
+
+# trechos de inclinação coincidente
+incy <- 0.02
+for(i in 2003:2015){
+  lines(c(i,i),c(vicoa2[(i %% 2003)+1],acc[(i %% 2003)+1]),type="l", lty="dotted", col="gray77")
+
+  if(vdif[(i %% 2003)+1]) rcor <- "seagreen"
+    else rcor <- "red"
+    
+  rect(i, 0.7-incy, i+1, 0.7+incy, col=rcor, border = FALSE)
+  # text(i, 0.9, ncoalizoes[paste0(i,'')], cex=0.7, col="blue")
+}
+
+axis(1,ini:(fim+1),c(anos,"2016"))
+axis(2,seq(0,1,0.1),as.character(seq(0,1,0.1)))
+box()
+legend('bottomright', legend=c("qui-quadrado", "Naive Bayes", "sinal variação ="), col=c("blue", "black", "seagreen"),
+       lwd=c(3,3,7), cex = 0.8)
+```
 

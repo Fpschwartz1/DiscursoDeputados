@@ -112,7 +112,9 @@ histograma <- function(freq_disc, intervalo_classe = "sem"){
 
 comparatermo_distfreq <- function(tema, ini, fim, 
                                  partidos=c('PT', 'PSDB'), cores=c('red', 'skyblue'),
-                                 codigoFase=NULL){
+                                 codigoFase=NULL,
+                                 breaksP1="Sturges",
+                                 breaksP2="Sturges"){
 
   ano <- str_sub(ini, 7, 10)
   
@@ -136,16 +138,15 @@ comparatermo_distfreq <- function(tema, ini, fim,
   hP2 <- histograma(freqP2, 'dia')
   
   # histograma
-  hist(hP2,col=cores[2],border=F, main = paste("(a) Histograma: tema", tema, "-", ano), 
+  hist(hP2,col=cores[2], border=F, main='', breaks=breaksP2,
        xlab='Frequência do tema por dia no período', ylab='Frequência')
-  hist(hP1,add=T,col=scales::alpha(cores[1],.7),border=F)
+  hist(hP1,add=T,col=scales::alpha(cores[1],.7),border=F, breaks=breaksP1)
   legend('right', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
   box()
   # densidade de probabilidade
   d1 <- density(hP1)
   d2 <- density(hP2)
-  plot(d2, main = paste("(b) Densidade de probabilidade: tema", tema, "-", ano), 
-       xlab='Frequência do tema por dia no período', ylab='Densidade')
+  plot(d2, main='', xlab='Frequência do tema por dia no período', ylab='Densidade')
   polygon(d2, col=cores[2], border="blue")
   lines(d1)
   polygon(d1, col=scales::alpha(cores[1],.7), border="blue")
@@ -156,20 +157,24 @@ comparatermo_distfreq <- function(tema, ini, fim,
   hP2 <- hP2[hP2 > 0]
   
   # histograma
-  hist(hP2,col=cores[2],border=F, main = paste("(c) Histograma: tema", tema, "-", ano), 
+  hist(hP2,col=cores[2],border=F, main='', breaks=breaksP2,
        xlab='Frequência do tema por dia no período', ylab='Frequência')
-  hist(hP1,add=T,col=scales::alpha(cores[1],.7),border=F)
+  hist(hP1,add=T,col=scales::alpha(cores[1],.7),border=F, breaks=breaksP1)
   legend('right', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
   box()
   # densidade de probabilidade
   d1 <- density(hP1)
   d2 <- density(hP2)
-  plot(d2, main = paste("(d) Densidade de probabilidade: tema", tema, "-", ano), 
-       xlab='Frequência do tema por dia no período', ylab='Densidade')
+  plot(d2, main='', xlab='Frequência do tema por dia no período', ylab='Densidade')
   polygon(d2, col=cores[2], border="blue")
   lines(d1)
   polygon(d1, col=scales::alpha(cores[1],.7), border="blue")
   legend('right', legend=partidos, col=cores, lty=c(1:1), lwd=c(5,5))
+  
+  par(mfrow=c(1,1), cex = .8)
+  title(paste0("(a) Distribuição de frequências do tema ", tema, " - ", ano, ": inclui dias com zero ocorrência.\n\n"))
+  par(mfrow=c(2,1), cex = .8)
+  title(paste0("(b) Distribuição de frequências do tema ", tema, " - ", ano, ": desconsidera dias com zero ocorrência.\n\n"))
   
   par(mfrow=c(1,1), cex = 1)
 }
@@ -180,13 +185,10 @@ comparatermo_distfreq <- function(tema, ini, fim,
 
 comparatermo_distfreq('corrupção', '01/01/2016', '31/12/2016')
 comparatermo_distfreq('educação', '01/01/2016', '31/12/2016')
-comparatermo_distfreq('previdência', '01/01/2016', '31/12/2016')
-comparatermo_distfreq('mulher', '01/01/2016', '31/12/2016')
+comparatermo_distfreq('previdência', '01/01/2016', '31/12/2016', breaksP1=100)
+comparatermo_distfreq('mulher', '01/01/2016', '31/12/2016', breaksP1=100)
 
 
-##########################################
-dnormalComp(mean(hPSDB), sd(hPT)/sqrt(length(hPSDB)),
-            mean(hPMDB), sd(hPMDB)/sqrt(length(hPMDB)))
 
 
 

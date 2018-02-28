@@ -36,7 +36,7 @@ corpus_por_criterios <- function(discursos, ini, fim, partido, codigoFase = NULL
   print('Tipos de sessão')
   print(tipo_sessao)
   
-  ### Lê arquivo de discursos e aplica critérios iniciais de filtragem
+  ### Aplica critérios iniciais de filtragem ao data.frame discursos
   pastadest <- "..\\CorpusRDS\\"
   arquivo <- paste0(pastadest, "corpus_", partido, "_", ini, "_", fim, ".rds")
   discursos <- discursos[  str_sub(discursos$dataSessao,7,10) >= ini 
